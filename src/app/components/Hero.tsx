@@ -26,7 +26,7 @@ export function Hero() {
           <span className="font-semibold">Horšovského Týna</span>
         </h1>
         <p className="text-xl sm:text-2xl text-white/90 mb-10 font-light max-w-2xl mx-auto">
-          Traditional Czech and international cuisine in a unique historic atmosphere
+          Poctivé suroviny, domácí receptury, nezapomenutelná chuť
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <a
