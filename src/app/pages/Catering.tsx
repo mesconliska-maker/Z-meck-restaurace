@@ -1,5 +1,5 @@
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { Users, UtensilsCrossed, Calendar, CheckCircle, Phone } from "lucide-react";
+import { Users, UtensilsCrossed, Calendar, Phone } from "lucide-react";
 
 const cateringServices = [
   {
@@ -22,52 +22,15 @@ const cateringServices = [
   }
 ];
 
-const cateringPackages = [
-  {
-    id: 1,
-    name: "Základní balíček",
-    price: "od 350 Kč/osoba",
-    items: [
-      "Studené předkrmě",
-      "Hlavní chod dle výběru",
-      "Přílohy",
-      "Nápoje (voda, káva)",
-      "Rozvoz do 10 km zdarma"
-    ]
-  },
-  {
-    id: 2,
-    name: "Premium balíček",
-    price: "od 550 Kč/osoba",
-    popular: true,
-    items: [
-      "Studené i teplé předkrmy",
-      "Polévka",
-      "2 hlavní chody dle výběru",
-      "Přílohy a saláty",
-      "Dezert",
-      "Nápoje (voda, káva, džus)",
-      "Rozvoz do 20 km zdarma",
-      "Servírovací nádobí a příbory"
-    ]
-  },
-  {
-    id: 3,
-    name: "Luxusní balíček",
-    price: "od 850 Kč/osoba",
-    items: [
-      "Welcome drink",
-      "Studené i teplé předkrmy",
-      "Polévka",
-      "3 hlavní chody dle výběru",
-      "Přílohy premium kvality",
-      "Dezertový buffet",
-      "Kompletní výběr nápojů",
-      "Rozvoz bez omezení",
-      "Obsluha a servírování",
-      "Premium nádobí a výzdoba"
-    ]
-  }
+const galleryImages = [
+  { id: 1, src: "/jidlo1.jpeg", alt: "Catering jídlo" },
+  { id: 2, src: "/jidlo2.jpeg", alt: "Catering jídlo" },
+  { id: 3, src: "/jidlo3.jpeg", alt: "Catering jídlo" },
+  { id: 4, src: "/jidlo4.jpeg", alt: "Catering jídlo" },
+  { id: 5, src: "/jidlo9.jpeg", alt: "Catering jídlo" },
+  { id: 6, src: "/jidlo10.jpeg", alt: "Catering jídlo" },
+  { id: 7, src: "/jidlo11.jpeg", alt: "Catering jídlo" },
+  { id: 8, src: "/jidlo12.jpeg", alt: "Catering jídlo" },
 ];
 
 export function Catering() {
@@ -152,7 +115,7 @@ export function Catering() {
         </div>
       </section>
 
-      {/* Packages */}
+      {/* Photo Gallery */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -160,62 +123,26 @@ export function Catering() {
               className="text-4xl font-light text-gray-900 mb-4"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              Cateringové <span className="font-semibold">balíčky</span>
+              Z našeho <span className="font-semibold">cateringu</span>
             </h2>
             <div className="w-20 h-1 bg-gradient-to-r from-orange-600 to-orange-700 mx-auto mb-6"></div>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Vyberte si jeden z našich připravených balíčků nebo nám sdělte vaše představy 
-              a vytvoříme nabídku na míru
+              Ukázky z našich cateringových akcí
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {cateringPackages.map((pkg) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {galleryImages.map((image) => (
               <div 
-                key={pkg.id}
-                className={`bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 ${
-                  pkg.popular 
-                    ? 'border-orange-600 ring-4 ring-orange-50 scale-105' 
-                    : 'border-gray-100'
-                }`}
+                key={image.id}
+                className="relative aspect-square overflow-hidden rounded-xl group shadow-lg"
               >
-                {pkg.popular && (
-                  <div className="text-center mb-4">
-                    <span className="inline-block px-4 py-1 bg-gradient-to-r from-orange-600 to-orange-700 text-white text-sm font-medium rounded-full">
-                      NEJOBLÍBENĚJŠÍ
-                    </span>
-                  </div>
-                )}
-                
-                <h3 
-                  className="text-3xl font-medium text-gray-900 mb-2 text-center"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                >
-                  {pkg.name}
-                </h3>
-                <p className="text-2xl text-orange-700 font-medium text-center mb-8">
-                  {pkg.price}
-                </p>
-
-                <ul className="space-y-4 mb-8">
-                  {pkg.items.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle size={20} className="text-orange-700 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <a
-                  href="/kontakt"
-                  className={`block text-center px-6 py-3 rounded-lg transition-all ${
-                    pkg.popular
-                      ? 'bg-gradient-to-r from-orange-600 to-orange-700 text-white hover:from-orange-700 hover:to-orange-800 shadow-lg'
-                      : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                  }`}
-                >
-                  Objednat
-                </a>
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
             ))}
           </div>
