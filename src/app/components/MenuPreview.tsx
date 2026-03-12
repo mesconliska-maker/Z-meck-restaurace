@@ -1,30 +1,30 @@
-import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router";
 
 const menuItems = [
   {
     id: 1,
-    name: "Kuřecí řízek s hranolkami",
-    description: "Křupavý kuřecí řízek s domácími hranolkami a tatarskou omáčkou",
-    image: "https://images.unsplash.com/photo-1584944868902-d06d1ba6ec55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaGlja2VuJTIwc2Nobml0emVsJTIwZ291cm1ldCUyMGZvb2R8ZW58MXx8fHwxNzcyNDQxNDY1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+    name: "Hovězí steak na zeleném pepři",
+    description: "200 gr hovězí steak, hráškové lusky se slaninou, cibulové kroužky, aioli dip",
+    image: "/jidlo1.jpeg"
   },
   {
     id: 2,
-    name: "Hovězí steak",
-    description: "Šťavnatý hovězí steak s pepřovou omáčkou a grilovanou zeleninou",
-    image: "https://images.unsplash.com/photo-1652690772694-ac68867c30f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWVmJTIwc3RlYWslMjBmaW5lJTIwZGluaW5nfGVufDF8fHx8MTc3MjQ0MTQ2Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+    name: "Losos filet",
+    description: "200 gr losos s limetkovou omáčkou a červeným pepřem, grilovaný pórek, batátové hranolky",
+    image: "/jidlo2.jpeg"
   },
   {
     id: 3,
-    name: "Losos s bylinkovým máslem",
-    description: "Grilovaný losos s čerstvými bylinkami, citronem a restovanou zeleninou",
-    image: "https://images.unsplash.com/photo-1712334651022-de457758c2c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxtb24lMjBmaXNoJTIwZ291cm1ldCUyMHBsYXRlfGVufDF8fHx8MTc3MjQ0MTQ2Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+    name: "Kachní prso",
+    description: "200 gr kachní prso se švestkovou omáčkou, šťouchaný slaninový brambor",
+    image: "/jidlo3.jpeg"
   },
   {
     id: 4,
-    name: "Salát s kuřecími nugetkami",
-    description: "Čerstvý salát s křupavými kuřecími kousky a domácím dresinkem",
-    image: "https://images.unsplash.com/photo-1760888549075-0b9727e07735?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaGlja2VuJTIwc2FsYWQlMjBnb3VybWV0JTIwcmVzdGF1cmFudHxlbnwxfHx8fDE3NzI0NDE0NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+    name: "Špalíček z vepřové panenky",
+    description: "200 gr špalíček na liškách, slaninové hráškové lusky, demi glace, aioli dip",
+    image: "/jidlo4.jpeg"
   }
 ];
 
@@ -54,7 +54,7 @@ export function MenuPreview() {
               className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 group"
             >
               <div className="relative h-64 overflow-hidden">
-                <ImageWithFallback
+                <img
                   src={item.image}
                   alt={item.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -78,13 +78,13 @@ export function MenuPreview() {
 
         {/* CTA Button */}
         <div className="text-center">
-          <a
-            href="#menu-full"
+          <Link
+            to="/menu"
             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
             Kompletní menu
             <ArrowRight size={20} />
-          </a>
+          </Link>
         </div>
       </div>
     </section>
