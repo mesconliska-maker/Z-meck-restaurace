@@ -8,13 +8,27 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div className="md:col-span-1">
-            <h3 
-              className="text-3xl font-light mb-4"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              Zámecká<br />
-              <span className="font-semibold">restaurace</span>
-            </h3>
+            <Link to="/" className="flex items-center gap-3 mb-4">
+              <img 
+                src="/logo (1).png" 
+                alt="Zámecká restaurace" 
+                className="h-16 w-auto"
+              />
+              <div className="flex flex-col leading-tight">
+                <span 
+                  className="text-xl font-semibold text-white tracking-wide"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  Zámecká
+                </span>
+                <span 
+                  className="text-sm text-orange-500 tracking-widest uppercase"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  restaurace
+                </span>
+              </div>
+            </Link>
             <p className="text-gray-400 text-sm leading-relaxed">
               Tradiční česká a mezinárodní kuchyně v srdci Horšovského Týna
             </p>
@@ -48,7 +62,7 @@ export function Footer() {
             <div className="space-y-3 text-gray-400">
               <div className="flex items-start gap-2">
                 <MapPin size={18} className="mt-1 flex-shrink-0" />
-                <span className="text-sm">nám. Republiky 66, Horšovský Týn</span>
+                <span className="text-sm">nám. Republiky 66, 346 01 Horšovský Týn</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone size={18} className="flex-shrink-0" />
@@ -69,13 +83,17 @@ export function Footer() {
           <div>
             <h4 className="font-medium text-lg mb-4">Otevírací doba</h4>
             <div className="space-y-2 text-gray-400 text-sm">
-              <div className="flex justify-between">
-                <span>Pondělí - Pátek</span>
-                <span>11:00 - 22:00</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Sobota - Neděle</span>
+              <div className="flex justify-between gap-4">
+                <span>Pondělí - Čtvrtek</span>
                 <span>11:00 - 23:00</span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span>Pátek - Sobota</span>
+                <span>11:00 - 24:00</span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span>Neděle</span>
+                <span>11:00 - 22:00</span>
               </div>
             </div>
             
@@ -84,13 +102,17 @@ export function Footer() {
               <h4 className="font-medium text-lg mb-4">Sledujte nás</h4>
               <div className="flex gap-3">
                 <a 
-                  href="#" 
+                  href="https://www.facebook.com/zameckahtyn" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 bg-gray-800 hover:bg-orange-700 rounded-full flex items-center justify-center transition-colors"
                 >
                   <Facebook size={20} />
                 </a>
                 <a 
-                  href="#" 
+                  href="https://www.instagram.com/zamecka_restaurace_htyn/" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 bg-gray-800 hover:bg-orange-700 rounded-full flex items-center justify-center transition-colors"
                 >
                   <Instagram size={20} />
