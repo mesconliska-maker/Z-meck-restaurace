@@ -75,7 +75,7 @@ export function WeeklyMenu() {
           </p>
         </div>
 
-        {/* Weekly Menu Grid */}
+        {/* Weekly Menu Grid - only Mon-Fri */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {weeklyMenu.map((day, index) => (
             <div 
@@ -125,27 +125,6 @@ export function WeeklyMenu() {
               </div>
             </div>
           ))}
-
-          {/* Weekend Notice Cards */}
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 flex items-center justify-center border-2 border-gray-200">
-            <div className="text-center">
-              <h3 className="text-2xl font-medium text-gray-700 mb-2" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                Sobota
-              </h3>
-              <p className="text-sm text-gray-500 mb-1">7.3.2026</p>
-              <p className="text-gray-600 mt-3">Menu à la carte</p>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 flex items-center justify-center border-2 border-gray-200">
-            <div className="text-center">
-              <h3 className="text-2xl font-medium text-gray-700 mb-2" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                Neděle
-              </h3>
-              <p className="text-sm text-gray-500 mb-1">8.3.2026</p>
-              <p className="text-gray-600 mt-3">Menu à la carte</p>
-            </div>
-          </div>
         </div>
 
         {/* Footer Note */}
