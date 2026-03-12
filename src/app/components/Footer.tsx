@@ -126,6 +126,9 @@ export function Footer() {
         <div className="pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
             <p>© 2026 Zámecká restaurace Horšovský Týn. Všechna práva vyhrazena.</p>
+            <p className="text-gray-500 text-sm">
+              Vytvořeno v <a href="https://comvio.cz" target="_blank" rel="noopener noreferrer" className="hover:text-orange-600 transition-colors">comvio.cz</a>
+            </p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-orange-600 transition-colors">
                 Ochrana osobních údajů
