@@ -12,7 +12,6 @@ export function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock form submission
     alert("Děkujeme za vaši zprávu! Brzy se vám ozveme.");
     setFormData({ name: "", email: "", phone: "", message: "" });
   };
@@ -63,7 +62,6 @@ export function Contact() {
               </h2>
               <div className="w-20 h-1 bg-gradient-to-r from-orange-600 to-orange-700 mb-8"></div>
 
-              {/* Contact Cards */}
               <div className="space-y-6">
                 <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
                   <div className="flex items-start gap-4">
@@ -74,8 +72,7 @@ export function Contact() {
                       <h3 className="font-medium text-gray-900 mb-2">Adresa</h3>
                       <p className="text-gray-600">
                         nám. Republiky 66<br />
-                        346 01 Horšovský Týn<br />
-                        Česká republika
+                        346 01 Horšovský Týn
                       </p>
                     </div>
                   </div>
@@ -92,7 +89,7 @@ export function Contact() {
                         +420 379 423 483
                       </a>
                       <p className="text-sm text-gray-500 mt-1">
-                        Pondělí - Neděle, 11:00 - 22:00
+                        Rezervace na telefonním čísle
                       </p>
                     </div>
                   </div>
@@ -123,16 +120,17 @@ export function Contact() {
                     <div>
                       <h3 className="font-medium text-gray-900 mb-3">Otevírací doba</h3>
                       <div className="space-y-2 text-gray-600">
-                        <div className="flex justify-between">
-                          <span>Pondělí - Pátek</span>
-                          <span className="font-medium">11:00 - 22:00</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Sobota - Neděle</span>
+                        <div className="flex justify-between gap-8">
+                          <span>Pondělí - Čtvrtek</span>
                           <span className="font-medium">11:00 - 23:00</span>
                         </div>
-                        <div className="pt-2 mt-2 border-t border-gray-200 text-sm">
-                          <span className="text-orange-700">Polední menu:</span> 11:00 - 14:00
+                        <div className="flex justify-between gap-8">
+                          <span>Pátek - Sobota</span>
+                          <span className="font-medium">11:00 - 24:00</span>
+                        </div>
+                        <div className="flex justify-between gap-8">
+                          <span>Neděle</span>
+                          <span className="font-medium">11:00 - 22:00</span>
                         </div>
                       </div>
                     </div>
@@ -243,16 +241,16 @@ export function Contact() {
             <div className="w-20 h-1 bg-gradient-to-r from-orange-600 to-orange-700 mx-auto mb-8"></div>
             
             <div className="rounded-2xl overflow-hidden shadow-2xl">
-              <div className="bg-gray-200 h-[500px] flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="text-gray-400 mx-auto mb-4" size={64} />
-                  <p className="text-gray-600 text-lg font-medium">nám. Republiky 66, Horšovský Týn</p>
-                  <p className="text-sm text-gray-400 mt-2">Interaktivní mapa - Google Maps integrace</p>
-                  <p className="text-sm text-gray-500 mt-4">
-                    V centru města, nedaleko zámku
-                  </p>
-                </div>
-              </div>
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2589.627617553489!2d12.941469876786629!3d49.529305553258354!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470abb5cba7ebd2d%3A0xf975b20c6a9cb67c!2zWsOhbWVja8OhIHJlc3RhdXJhY2U!5e0!3m2!1scs!2scz!4v1773305823821!5m2!1scs!2scz"
+                width="100%"
+                height="500"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-[500px]"
+              />
             </div>
           </div>
         </div>
