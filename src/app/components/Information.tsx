@@ -25,7 +25,7 @@ export function Information() {
             <h3 className="text-xl font-medium text-gray-900 mb-2">Adresa</h3>
             <p className="text-gray-600 leading-relaxed">
               nám. Republiky 66<br />
-              Horšovský Týn
+              346 01 Horšovský Týn
             </p>
           </div>
 
@@ -34,7 +34,7 @@ export function Information() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-600 to-orange-700 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
               <Phone className="text-white" size={28} />
             </div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">Telefon</h3>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">Rezervace</h3>
             <p className="text-gray-600 leading-relaxed">
               <a href="tel:+420379423483" className="hover:text-orange-700 transition-colors">
                 +420 379 423 483
@@ -48,9 +48,10 @@ export function Information() {
               <Clock className="text-white" size={28} />
             </div>
             <h3 className="text-xl font-medium text-gray-900 mb-2">Otevírací doba</h3>
-            <p className="text-gray-600 leading-relaxed">
-              Denně od 11:00<br />
-              Pondělí - Neděle
+            <p className="text-gray-600 leading-relaxed text-sm">
+              Po – Čt: 11:00 – 23:00<br />
+              Pá – So: 11:00 – 24:00<br />
+              Ne: 11:00 – 22:00
             </p>
           </div>
 
@@ -67,15 +68,18 @@ export function Information() {
           </div>
         </div>
 
-        {/* Map */}
+        {/* Google Map */}
         <div className="mt-16 rounded-2xl overflow-hidden shadow-2xl">
-          <div className="bg-gray-200 h-96 flex items-center justify-center">
-            <div className="text-center">
-              <MapPin className="text-gray-400 mx-auto mb-4" size={48} />
-              <p className="text-gray-500">Mapa - nám. Republiky 66, Horšovský Týn</p>
-              <p className="text-sm text-gray-400 mt-2">Map integration placeholder</p>
-            </div>
-          </div>
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2589.627617553489!2d12.941469876786629!3d49.529305553258354!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470abb5cba7ebd2d%3A0xf975b20c6a9cb67c!2zWsOhbWVja8OhIHJlc3RhdXJhY2U!5e0!3m2!1scs!2scz!4v1773305823821!5m2!1scs!2scz"
+            width="100%"
+            height="400"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="w-full h-[400px]"
+          />
         </div>
       </div>
     </section>
