@@ -3,66 +3,24 @@ import { useState } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const galleryImages = [
-  {
-    id: 1,
-    src: "https://images.unsplash.com/photo-1703797967062-70681a18f71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmaW5lJTIwZGluaW5nJTIwZm9vZCUyMHByZXNlbnRhdGlvbnxlbnwxfHx8fDE3NzI0NDE0Njd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Gurmánská prezentace jídla",
-    category: "Jídla"
-  },
-  {
-    id: 2,
-    src: "https://images.unsplash.com/photo-1756397481872-ed981ef72a51?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwcmVzdGF1cmFudCUyMGludGVyaW9yJTIwdGFibGVzfGVufDF8fHx8MTc3MjQ0MTQ2NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Interiér restaurace",
-    category: "Interiér"
-  },
-  {
-    id: 3,
-    src: "https://images.unsplash.com/photo-1763301331567-21c465b66e02?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXN0YXVyYW50JTIwdGVycmFjZSUyMG91dGRvb3IlMjBzZWF0aW5nfGVufDF8fHx8MTc3MjQ0MTQ2N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Venkovní terasa",
-    category: "Terasa"
-  },
-  {
-    id: 4,
-    src: "https://images.unsplash.com/photo-1652690772694-ac68867c30f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWVmJTIwc3RlYWslMjBmaW5lJTIwZGluaW5nfGVufDF8fHx8MTc3MjQ0MTQ2Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Hovězí steak",
-    category: "Jídla"
-  },
-  {
-    id: 5,
-    src: "https://images.unsplash.com/photo-1761138785146-7b5ad15851b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnb3VybWV0JTIwZGVzc2VydCUyMHBsYXRpbmd8ZW58MXx8fHwxNzcyNDQxNDY3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Gurmánský dezert",
-    category: "Dezerty"
-  },
-  {
-    id: 6,
-    src: "https://images.unsplash.com/photo-1754490822973-4406c61a2630?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3aW5lJTIwZ2xhc3NlcyUyMHJlc3RhdXJhbnQlMjBiYXJ8ZW58MXx8fHwxNzcyNDQxNDY5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Sklenice vína",
-    category: "Nápoje"
-  },
-  {
-    id: 7,
-    src: "https://images.unsplash.com/photo-1712334651022-de457758c2c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxtb24lMjBmaXNoJTIwZ291cm1ldCUyMHBsYXRlfGVufDF8fHx8MTc3MjQ0MTQ2Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Losos",
-    category: "Jídla"
-  },
-  {
-    id: 8,
-    src: "https://images.unsplash.com/photo-1768697358705-c1b60333da35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjByZXN0YXVyYW50JTIwaW50ZXJpb3IlMjBlbGVnYW50JTIwZGluaW5nfGVufDF8fHx8MTc3MjM0MTY2N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Luxusní interiér",
-    category: "Interiér"
-  },
-  {
-    id: 9,
-    src: "https://images.unsplash.com/photo-1584944868902-d06d1ba6ec55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaGlja2VuJTIwc2Nobml0emVsJTIwZ291cm1ldCUyMGZvb2R8ZW58MXx8fHwxNzcyNDQxNDY1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Kuřecí řízek",
-    category: "Jídla"
-  },
-  {
-    id: 10,
-    src: "https://images.unsplash.com/photo-1760888549075-0b9727e07735?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaGlja2VuJTIwc2FsYWQlMjBnb3VybWV0JTIwcmVzdGF1cmFudHxlbnwxfHx8fDE3NzI0NDE0NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Salát s kuřecím masem",
-    category: "Saláty"
-  }
+  { id: 1, src: "/jidlo1.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 2, src: "https://images.unsplash.com/photo-1756397481872-ed981ef72a51?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080", alt: "Elegant restaurant interior", category: "Interiér" },
+  { id: 3, src: "https://images.unsplash.com/photo-1763301331567-21c465b66e02?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080", alt: "Restaurant terrace", category: "Terasa" },
+  { id: 4, src: "/jidlo2.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 5, src: "https://images.unsplash.com/photo-1761138785146-7b5ad15851b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080", alt: "Gourmet dessert", category: "Dezerty" },
+  { id: 6, src: "https://images.unsplash.com/photo-1754490822973-4406c61a2630?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080", alt: "Wine glasses", category: "Nápoje" },
+  { id: 7, src: "/jidlo3.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 8, src: "https://images.unsplash.com/photo-1768697358705-c1b60333da35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080", alt: "Luxury restaurant interior", category: "Interiér" },
+  { id: 9, src: "/jidlo4.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 10, src: "https://images.unsplash.com/photo-1760888549075-0b9727e07735?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080", alt: "Chicken salad", category: "Saláty" },
+  { id: 11, src: "/jidlo5.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 12, src: "/jidlo6.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 13, src: "/jidlo7.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 14, src: "/jidlo8.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 15, src: "/jidlo9.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 16, src: "/jidlo10.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 17, src: "/jidlo11.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 18, src: "/jidlo12.jpeg", alt: "Jídlo", category: "Jídla" },
 ];
 
 export function GalleryPage() {
