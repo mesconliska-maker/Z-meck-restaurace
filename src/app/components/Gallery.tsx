@@ -1,55 +1,14 @@
-import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { useState } from "react";
 
 const galleryImages = [
-  {
-    id: 1,
-    src: "https://images.unsplash.com/photo-1703797967062-70681a18f71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmaW5lJTIwZGluaW5nJTIwZm9vZCUyMHByZXNlbnRhdGlvbnxlbnwxfHx8fDE3NzI0NDE0Njd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Gourmet food presentation",
-    category: "food"
-  },
-  {
-    id: 2,
-    src: "https://images.unsplash.com/photo-1756397481872-ed981ef72a51?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwcmVzdGF1cmFudCUyMGludGVyaW9yJTIwdGFibGVzfGVufDF8fHx8MTc3MjQ0MTQ2NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Restaurant interior",
-    category: "interior"
-  },
-  {
-    id: 3,
-    src: "https://images.unsplash.com/photo-1763301331567-21c465b66e02?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXN0YXVyYW50JTIwdGVycmFjZSUyMG91dGRvb3IlMjBzZWF0aW5nfGVufDF8fHx8MTc3MjQ0MTQ2N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Outdoor terrace seating",
-    category: "terrace"
-  },
-  {
-    id: 4,
-    src: "https://images.unsplash.com/photo-1652690772694-ac68867c30f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWVmJTIwc3RlYWslMjBmaW5lJTIwZGluaW5nfGVufDF8fHx8MTc3MjQ0MTQ2Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Beef steak",
-    category: "food"
-  },
-  {
-    id: 5,
-    src: "https://images.unsplash.com/photo-1761138785146-7b5ad15851b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnb3VybWV0JTIwZGVzc2VydCUyMHBsYXRpbmd8ZW58MXx8fHwxNzcyNDQxNDY3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Gourmet dessert",
-    category: "desserts"
-  },
-  {
-    id: 6,
-    src: "https://images.unsplash.com/photo-1754490822973-4406c61a2630?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3aW5lJTIwZ2xhc3NlcyUyMHJlc3RhdXJhbnQlMjBiYXJ8ZW58MXx8fHwxNzcyNDQxNDY5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Wine glasses",
-    category: "drinks"
-  },
-  {
-    id: 7,
-    src: "https://images.unsplash.com/photo-1712334651022-de457758c2c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxtb24lMjBmaXNoJTIwZ291cm1ldCUyMHBsYXRlfGVufDF8fHx8MTc3MjQ0MTQ2Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Salmon dish",
-    category: "food"
-  },
-  {
-    id: 8,
-    src: "https://images.unsplash.com/photo-1768697358705-c1b60333da35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjByZXN0YXVyYW50JTIwaW50ZXJpb3IlMjBlbGVnYW50JTIwZGluaW5nfGVufDF8fHx8MTc3MjM0MTY2N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    alt: "Luxury interior",
-    category: "interior"
-  }
+  { id: 1, src: "/jidlo1.jpeg", alt: "Hovězí steak" },
+  { id: 2, src: "/jidlo2.jpeg", alt: "Losos filet" },
+  { id: 3, src: "/jidlo3.jpeg", alt: "Kachní prso" },
+  { id: 4, src: "/jidlo4.jpeg", alt: "Vepřová panenka" },
+  { id: 5, src: "/jidlo5.jpeg", alt: "Specialita šéfkuchaře" },
+  { id: 6, src: "/jidlo6.jpeg", alt: "Dezert" },
+  { id: 7, src: "/jidlo7.jpeg", alt: "Jídlo z restaurace" },
+  { id: 8, src: "/jidlo8.jpeg", alt: "Jídlo z restaurace" },
 ];
 
 export function Gallery() {
@@ -80,7 +39,7 @@ export function Gallery() {
               className="relative aspect-square overflow-hidden rounded-lg cursor-pointer group"
               onClick={() => setSelectedImage(index)}
             >
-              <ImageWithFallback
+              <img
                 src={image.src}
                 alt={image.alt}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -107,7 +66,7 @@ export function Gallery() {
           >
             ×
           </button>
-          <ImageWithFallback
+          <img
             src={galleryImages[selectedImage].src}
             alt={galleryImages[selectedImage].alt}
             className="max-h-[90vh] max-w-[90vw] object-contain"
