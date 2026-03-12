@@ -19,12 +19,26 @@ export function Header() {
         <div className="flex justify-between items-center h-20">
          {/* Logo */}
 <div className="flex items-center">
-  <Link to="/">
+  <Link to="/" className="flex items-center gap-3">
     <img 
       src="/logo (1).png" 
       alt="Zámecká restaurace" 
       className="h-14 w-auto"
     />
+    <div className="flex flex-col leading-tight">
+      <span 
+        className="text-xl font-semibold text-gray-900 tracking-wide"
+        style={{ fontFamily: 'Cormorant Garamond, serif' }}
+      >
+        Zámecká
+      </span>
+      <span 
+        className="text-sm text-orange-700 tracking-widest uppercase"
+        style={{ fontFamily: 'Cormorant Garamond, serif' }}
+      >
+        restaurace
+      </span>
+    </div>
   </Link>
 </div>
 
