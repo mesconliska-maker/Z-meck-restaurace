@@ -15,13 +15,28 @@ const galleryImages = [
   { id: 10, src: "/jidlo10.jpeg", alt: "Jídlo", category: "Jídla" },
   { id: 11, src: "/jidlo11.jpeg", alt: "Jídlo", category: "Jídla" },
   { id: 12, src: "/jidlo12.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 13, src: "/jidlo13.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 14, src: "/jidlo14.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 15, src: "/jidlo15.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 16, src: "/jidlo16.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 17, src: "/jidlo17.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 18, src: "/jidlo18.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 19, src: "/jidlo19.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 18, src: "/catering1.jpeg", alt: "Catering", category: "Catering" },
+  { id: 19, src: "/catering2.jpeg", alt: "Catering", category: "Catering" },
+  { id: 20, src: "/catering3.jpeg", alt: "Catering", category: "Catering" },
+  { id: 21, src: "/catering4.jpeg", alt: "Catering", category: "Catering" },
+  { id: 22, src: "/prostor1.jpeg", alt: "Prostor restaurace", category: "Prostor" },
+  { id: 23, src: "/prostor2.jpeg", alt: "Prostor restaurace", category: "Prostor" },
+  { id: 24, src: "/prostor3.jpeg", alt: "Prostor restaurace", category: "Prostor" },
+  { id: 25, src: "/prostor4.jpeg", alt: "Prostor restaurace", category: "Prostor" },
 ];
 
 export function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("Vše");
 
-  const categories = ["Vše", ...Array.from(new Set(galleryImages.map(img => img.category)))];
+  const categories = ["Vše", "Jídla", "Catering", "Prostor"];
   
   const filteredImages = selectedCategory === "Vše" 
     ? galleryImages 
