@@ -15,13 +15,21 @@ const galleryImages = [
   { id: 10, src: "/jidlo10.jpeg", alt: "Jídlo", category: "Jídla" },
   { id: 11, src: "/jidlo11.jpeg", alt: "Jídlo", category: "Jídla" },
   { id: 12, src: "/jidlo12.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 13, src: "/catering1.jpeg", alt: "Catering", category: "Catering" },
+  { id: 14, src: "/catering2.jpeg", alt: "Catering", category: "Catering" },
+  { id: 15, src: "/catering3.jpeg", alt: "Catering", category: "Catering" },
+  { id: 16, src: "/catering4.jpeg", alt: "Catering", category: "Catering" },
+  { id: 17, src: "/prostor1.jpeg", alt: "Prostor restaurace", category: "Prostor" },
+  { id: 18, src: "/prostor2.jpeg", alt: "Prostor restaurace", category: "Prostor" },
+  { id: 19, src: "/prostor3.jpeg", alt: "Prostor restaurace", category: "Prostor" },
+  { id: 20, src: "/prostor4.jpeg", alt: "Prostor restaurace", category: "Prostor" },
 ];
 
 export function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("Vše");
 
-  const categories = ["Vše", ...Array.from(new Set(galleryImages.map(img => img.category)))];
+  const categories = ["Vše", "Jídla", "Catering", "Prostor"];
   
   const filteredImages = selectedCategory === "Vše" 
     ? galleryImages 
