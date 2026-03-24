@@ -26,6 +26,8 @@ const galleryImages = [
   { id: 21, src: "/prostor2.jpeg", alt: "Prostor restaurace", category: "Prostor" },
   { id: 22, src: "/prostor3.jpeg", alt: "Prostor restaurace", category: "Prostor" },
   { id: 23, src: "/prostor4.jpeg", alt: "Prostor restaurace", category: "Prostor" },
+  { id: 24, src: "/prostor5.jpeg", alt: "Prostor restaurace", category: "Prostor" },
+  { id: 25, src: "/prostor6.jpeg", alt: "Prostor restaurace", category: "Prostor" },
 ];
 
 export function GalleryPage() {
