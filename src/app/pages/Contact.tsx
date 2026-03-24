@@ -89,7 +89,7 @@ export function Contact() {
                         +420 379 423 483
                       </a>
                       <p className="text-sm text-gray-500 mt-1">
-                        Rezervace na telefonním čísle
+                        Rezervace pouze telefonicky
                       </p>
                     </div>
                   </div>
@@ -141,13 +141,21 @@ export function Contact() {
 
             {/* Contact Form */}
             <div>
-              <h2 
+              <h2
                 className="text-4xl font-light text-gray-900 mb-6"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 Napište <span className="font-semibold">nám</span>
               </h2>
-              <div className="w-20 h-1 bg-gradient-to-r from-orange-600 to-orange-700 mb-8"></div>
+              <div className="w-20 h-1 bg-gradient-to-r from-orange-600 to-orange-700 mb-6"></div>
+              <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+                <Phone className="text-orange-600 flex-shrink-0 mt-0.5" size={20} />
+                <p className="text-orange-800 text-sm">
+                  <strong>Rezervace stolů jsou pouze telefonicky</strong> na čísle{" "}
+                  <a href="tel:+420379423483" className="underline hover:text-orange-900">+420 379 423 483</a>.
+                  Tento formulář slouží pro obecné dotazy.
+                </p>
+              </div>
 
               <form onSubmit={handleSubmit} className="bg-white rounded-xl p-8 shadow-lg">
                 <div className="space-y-6">

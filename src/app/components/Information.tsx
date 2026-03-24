@@ -40,6 +40,7 @@ export function Information() {
                 +420 379 423 483
               </a>
             </p>
+            <p className="text-sm text-gray-500 mt-1">pouze telefonicky</p>
           </div>
 
           {/* Hours */}

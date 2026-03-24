@@ -12,15 +12,15 @@ export function ReservationCTA() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <Calendar className="text-white mx-auto mb-6" size={64} />
-        <h2 
+        <h2
           className="text-4xl sm:text-5xl lg:text-6xl font-light text-white mb-6"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Kontaktujte nás <br />
-          <span className="font-semibold">ještě dnes</span>
+          Rezervace <br />
+          <span className="font-semibold">pouze telefonicky</span>
         </h2>
         <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-          Rádi vám odpovíme na vaše dotazy a zajistíme vše potřebné
+          Rezervujte svůj stůl jednoduše telefonicky. Rádi vám pomůžeme!
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <a
@@ -33,7 +33,7 @@ export function ReservationCTA() {
             to="/kontakt"
             className="px-10 py-5 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-all text-lg"
           >
-            Kontaktní formulář
+            Kontakt &amp; dotazy
           </Link>
         </div>
       </div>
