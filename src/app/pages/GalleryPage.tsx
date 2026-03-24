@@ -20,6 +20,8 @@ const galleryImages = [
   { id: 15, src: "/jidlo15.jpeg", alt: "Jídlo", category: "Jídla" },
   { id: 16, src: "/jidlo16.jpeg", alt: "Jídlo", category: "Jídla" },
   { id: 17, src: "/jidlo17.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 18, src: "/jidlo18.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 19, src: "/jidlo19.jpeg", alt: "Jídlo", category: "Jídla" },
   { id: 18, src: "/catering1.jpeg", alt: "Catering", category: "Catering" },
   { id: 19, src: "/catering2.jpeg", alt: "Catering", category: "Catering" },
   { id: 20, src: "/catering3.jpeg", alt: "Catering", category: "Catering" },
