@@ -65,6 +65,19 @@ function getTodayDay(): string {
   return days[new Date().getDay()];
 }
 
+function formatDate(value: any): string {
+  if (!value) return "";
+  // Google Sheets vrací datum jako "Date(2026,3,3)" — měsíc je 0-indexed
+  if (typeof value === "string" && value.startsWith("Date(")) {
+    const parts = value.replace("Date(", "").replace(")", "").split(",");
+    const year = parseInt(parts[0]);
+    const month = parseInt(parts[1]) + 1; // +1 protože je 0-indexed
+    const day = parseInt(parts[2]);
+    return `${day}.${month}.${year}`;
+  }
+  return String(value);
+}
+
 export function WeeklyMenu() {
   const [menu, setMenu] = useState<DayMenu[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,7 +97,7 @@ export function WeeklyMenu() {
           .filter((row: any) => row.c[0]?.v)
           .map((row: any) => ({
             day: row.c[0]?.v || "",
-            date: row.c[1]?.v || "",
+            date: formatDate(row.c[1]?.v),
             isToday: (row.c[0]?.v || "") === today,
             soup: row.c[2]?.v || "",
             meals: [
