@@ -1,15 +1,101 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Zámecká restaurace</title>
-    </head>
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
-  
+    <!-- Primary Meta Tags -->
+    <title>Zámecká restaurace Horšovský Týn | nám. Republiky 66</title>
+    <meta name="title" content="Zámecká restaurace Horšovský Týn | nám. Republiky 66" />
+    <meta name="description" content="Zámecká restaurace v Horšovském Týně nabízí tradiční českou a mezinárodní kuchyni v historickém prostředí. Otevřeno Po–Čt 11–23, Pá–So 11–24, Ne 11–22. Catering, firemní akce. Rezervace: +420 379 423 483." />
+    <meta name="keywords" content="Zámecká restaurace, Horšovský Týn, restaurace Horšovský Týn, česká kuchyně, catering Domažlice, obědy Horšovský Týn, firemní akce, slavnostní večeře, zámek Horšovský Týn" />
+    <meta name="author" content="Zámecká restaurace Horšovský Týn" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.zamecka-htyn.cz/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="restaurant" />
+    <meta property="og:locale" content="cs_CZ" />
+    <meta property="og:url" content="https://www.zamecka-htyn.cz/" />
+    <meta property="og:title" content="Zámecká restaurace Horšovský Týn" />
+    <meta property="og:description" content="Tradiční česká a mezinárodní kuchyně v historickém prostředí zámku v Horšovském Týně. Catering, firemní akce, slavnostní příležitosti." />
+    <meta property="og:image" content="https://www.zamecka-htyn.cz/vvBBFxI.jpeg" />
+    <meta property="og:image:alt" content="Zámecká restaurace Horšovský Týn" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Zámecká restaurace Horšovský Týn" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Zámecká restaurace Horšovský Týn" />
+    <meta name="twitter:description" content="Tradiční česká a mezinárodní kuchyně v historickém prostředí zámku v Horšovském Týně. Catering, firemní akce, slavnostní příležitosti." />
+    <meta name="twitter:image" content="https://www.zamecka-htyn.cz/vvBBFxI.jpeg" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Zámecká restaurace",
+      "url": "https://www.zamecka-htyn.cz",
+      "logo": "https://www.zamecka-htyn.cz/fav.jpeg",
+      "image": "https://www.zamecka-htyn.cz/vvBBFxI.jpeg",
+      "description": "Zámecká restaurace v Horšovském Týně nabízí tradiční českou a mezinárodní kuchyni v historickém prostředí. Catering, firemní akce a slavnostní příležitosti.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "nám. Republiky 66",
+        "addressLocality": "Horšovský Týn",
+        "postalCode": "346 01",
+        "addressCountry": "CZ"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 49.5295,
+        "longitude": 12.9479
+      },
+      "telephone": "+420379423483",
+      "email": "info@zamecka-restaurace.cz",
+      "servesCuisine": ["Czech", "International", "European"],
+      "priceRange": "$$",
+      "currenciesAccepted": "CZK",
+      "paymentAccepted": "Cash, Credit Card",
+      "hasMap": "https://maps.google.com/?q=nám.+Republiky+66,+346+01+Horšovský+Týn",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+          "opens": "11:00",
+          "closes": "23:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Friday", "Saturday"],
+          "opens": "11:00",
+          "closes": "24:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Sunday",
+          "opens": "11:00",
+          "closes": "22:00"
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/zameckahtyn",
+        "https://www.instagram.com/zamecka_restaurace_htyn/"
+      ]
+    }
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
