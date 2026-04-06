@@ -12,6 +12,7 @@ interface DayMenu {
   isToday: boolean;
   soup: string;
   meals: Meal[];
+  note?: string;
 }
 
 const SHEET_ID = "1OJp1WUjXfYEXAOIh4AM08gBg4JumJS0Yd8DDlXi1API";
@@ -19,43 +20,41 @@ const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tq
 
 const fallbackMenu: DayMenu[] = [
   {
-    day: "Pondělí", date: "7.4.2026", isToday: false,
-    soup: "Masový vývar se zeleninou a játrovými knedlíčky",
+    day: "Pondělí", date: "6.4.2026", isToday: false,
+    note: "Svátek, otevřeno",
+    soup: "",
+    meals: []
+  },
+  {
+    day: "Úterý", date: "7.4.2026", isToday: false,
+    soup: "Česnečka se sýrem a krutóny",
     meals: [
-      { number: "1", name: "Zapečené šunkofleky s chedarem, kyselá okurka" },
-      { number: "2", name: "Kuřecí medailonky s pikantní hořčičnou omáčkou, divoká rýže" }
+      { number: "1", name: "Domácí sekaná, bramborová kaše, okurkový salát" },
+      { number: "2", name: "Zeleninový salát s kuřecími nugetkami v popcornu, koktejlový dip, bagetka" }
     ]
   },
   {
-    day: "Úterý", date: "8.4.2026", isToday: false,
-    soup: "Krkonošská zelňačka",
+    day: "Středa", date: "8.4.2026", isToday: false,
+    soup: "Zelňačka",
     meals: [
-      { number: "1", name: "Holandský řízek, bramborová kaše, okurkový salát" },
-      { number: "2", name: "Zeleninový salát s caesar dresinkem a kuřecím masem, corn bageta" }
+      { number: "1", name: "Plněný vepřový řízek cordon bleu, vařený brambor, tatarka" },
+      { number: "2", name: "Lasagne s kuřecím masem a jemnou tomatovou omáčkou, zapečené mozzarellou" }
     ]
   },
   {
-    day: "Středa", date: "9.4.2026", isToday: false,
-    soup: "Gulášová",
+    day: "Čtvrtek", date: "9.4.2026", isToday: false,
+    soup: "Hrachová se slaninovým chipsem",
     meals: [
-      { number: "1", name: "Plněný paprikový lusk, rajská omáčka, houskový knedlík" },
-      { number: "2", name: "Tajemství trhanovského zámku, domácí bramborové plátky, tatarka" }
+      { number: "1", name: "Dušená mrkev, vepřové kostky, domácí rozpek" },
+      { number: "2", name: "Pečené masové koule, rajská omáčka, kolínka nebo houskový knedlík" }
     ]
   },
   {
-    day: "Čtvrtek", date: "10.4.2026", isToday: false,
-    soup: "Pórková s vajíčkem",
+    day: "Pátek", date: "10.4.2026", isToday: false,
+    soup: "Bramboračka",
     meals: [
-      { number: "1", name: "Pečené králičí stehno, špenát, špekový bramborový knedlík" },
-      { number: "2", name: "Vepřový řízek Ondráš, vařený brambor, coleslaw salát" }
-    ]
-  },
-  {
-    day: "Pátek", date: "11.4.2026", isToday: false,
-    soup: "Zeleninový vývar se šunkovými knedlíčky",
-    meals: [
-      { number: "1", name: "Pečená kuřecí roláda, vařený pařížský brambor s bylinkami, dijonský dip" },
-      { number: "2", name: "Rizoto z vepřového masa se zeleninou, strouhaný sýr, beraní rohy" }
+      { number: "1", name: "Smažený hermelín se šunkou, vařený brambor, tatarka" },
+      { number: "2", name: "Domácí pražská kuřecí roláda, šťouchaný bylinkový brambor" }
     ]
   }
 ];
@@ -169,26 +168,34 @@ export function WeeklyMenu() {
                   )}
                 </div>
 
-                <div className="mb-4 pb-4 border-b border-gray-100">
-                  <div className="flex items-start gap-2">
-                    <UtensilsCrossed size={18} className="text-orange-700 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Polévka</p>
-                      <p className="text-gray-900 leading-snug">{day.soup}</p>
-                    </div>
+                {day.note ? (
+                  <div className="flex items-center justify-center py-6">
+                    <span className="text-orange-700 font-medium text-lg">{day.note}</span>
                   </div>
-                </div>
-
-                <div className="space-y-3">
-                  {day.meals.map((meal, mealIndex) => (
-                    <div key={mealIndex} className="flex items-start gap-3">
-                      <div className="w-7 h-7 bg-gradient-to-br from-orange-600 to-orange-700 text-white rounded-full flex items-center justify-center font-medium text-sm flex-shrink-0">
-                        {meal.number}
+                ) : (
+                  <>
+                    <div className="mb-4 pb-4 border-b border-gray-100">
+                      <div className="flex items-start gap-2">
+                        <UtensilsCrossed size={18} className="text-orange-700 mt-1 flex-shrink-0" />
+                        <div>
+                          <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Polévka</p>
+                          <p className="text-gray-900 leading-snug">{day.soup}</p>
+                        </div>
                       </div>
-                      <p className="text-gray-700 leading-snug pt-0.5">{meal.name}</p>
                     </div>
-                  ))}
-                </div>
+
+                    <div className="space-y-3">
+                      {day.meals.map((meal, mealIndex) => (
+                        <div key={mealIndex} className="flex items-start gap-3">
+                          <div className="w-7 h-7 bg-gradient-to-br from-orange-600 to-orange-700 text-white rounded-full flex items-center justify-center font-medium text-sm flex-shrink-0">
+                            {meal.number}
+                          </div>
+                          <p className="text-gray-700 leading-snug pt-0.5">{meal.name}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>
