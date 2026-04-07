@@ -6,10 +6,10 @@ const menuCategories = [
     id: 1,
     name: "Studené předkrmy",
     items: [
-      { name: "100 gr Domácí hovězí roastbeef, aioli dip, kapary, bagetka", price: "175 Kč" },
-      { name: "100 gr Tatarský biftek, 3 ks topinek", price: "175 Kč" },
-      { name: "80 gr Hovězí carpaccio, parmezán, capary, bylinková bagetka", price: "175 Kč" },
-      { name: "120 gr Carpaccio z červené řepy s kozím sýrem a karamelizovanými ořechy, bylinková bageta", price: "159 Kč" }
+      { name: "100 g Tatarský biftek, 3 ks topinek", price: "175 Kč" },
+      { name: "80 g Hovězí carpaccio, parmezán, capary, bylinková bagetka", price: "175 Kč" },
+      { name: "100 g Carpaccio z červené řepy s kozím sýrem a karamelizovanými ořechy, bylinková bageta", price: "159 Kč" },
+      { name: "100 g Krevetový špíz (2 ks), wakame salát, dip z medvědího česneku", price: "175 Kč" }
     ]
   },
   {
@@ -18,110 +18,107 @@ const menuCategories = [
     items: [
       { name: "Dle denní nabídky", price: "49 Kč" },
       { name: "Tomatová, bylinková bageta", price: "69 Kč" },
-      { name: "Hříbková, bylinková bageta", price: "69 Kč" },
-      { name: "Dýňová s kokosovým mlékem", price: "69 Kč" }
+      { name: "Hříbková, bylinková bageta", price: "69 Kč" }
     ]
   },
   {
     id: 3,
     name: "Speciality",
     items: [
-      { name: "Podzimní burger s trhaným hovězím masem, domácí cibulové chutney, chedarové uhlíky, slanina, kořeněné hranolky, BBQ dip", price: "289 Kč", popular: true },
-      { name: "Zámecké toustíky s kuřecím masem a nivou", price: "189 Kč" }
+      { name: "Jarní burger s trhaným hovězím masem, špenátovými listy, sázeným vejcem a slaninou, batátové hranolky, BBQ dip", price: "299 Kč", popular: true }
     ]
   },
   {
     id: 4,
     name: "Saláty",
     items: [
-      { name: "S roastbeefem, chimichurri dip, bagetka", price: "259 Kč" },
+      { name: "S panenkou sous vide a chimichurri omáčkou, bylinková bagetka", price: "269 Kč" },
       { name: "S rozpečeným hermelínem, karamelizované ořechy, vinaigrette, bylinková bageta", price: "249 Kč" },
-      { name: "S kuřecím masem, slaninový chips, parmezán, caesar dresink a bylinková bageta", price: "249 Kč", popular: true },
-      { name: "S kuřecím masem a zámeckým dipem, bylinková bageta", price: "239 Kč" }
+      { name: "S kuřecím masem, slaninový chips, parmezán, caesar dresink a bylinková bageta", price: "249 Kč", popular: true }
     ]
   },
   {
     id: 5,
     name: "Bezmasá jídla",
     items: [
-      { name: "100 gr Smažený sýr, tatarka", price: "159 Kč" },
-      { name: "150 gr Rozpečený hermelín, restovaná cherry rajčátka s pařížským bramborem na cibulce a hráškovými lusky, Jack Daniels dip", price: "189 Kč" },
-      { name: "200 gr Smažený sýrový talíř (eidam, niva, balkánský sýr, hermelín), spousta čerstvé zeleniny, bylinkový dip, brusinky", price: "229 Kč" }
+      { name: "150 g Smažený sýr, tatarka", price: "159 Kč" },
+      { name: "150 g Rozpečený hermelín s pečenou jarní zeleninou, bylinkový dip, bagetka", price: "189 Kč" },
+      { name: "200 g Smažený sýrový talíř (eidam, niva, balkánský sýr, hermelín), spousta čerstvé zeleniny, bylinkový dip, brusinky", price: "229 Kč" }
     ]
   },
   {
     id: 6,
     name: "Ryby",
     items: [
-      { name: "200 gr Losos filet s limetkovou omáčkou a červeným pepřem, grilovaný pórek s cherry rajčátky a hráškovými lusky, batátové hranolky", price: "319 Kč", popular: true },
-      { name: "200 gr Losos filet s bylinkovým máslem a spoustou čerstvé zeleniny, chimichurri dip", price: "299 Kč" }
+      { name: "200 g Losos filet s limetkovou omáčkou a zeleným chřestem, batátové hranolky", price: "329 Kč", popular: true },
+      { name: "200 g Losos filet s bylinkovým máslem a spoustou čerstvé zeleniny, chimichurri dip", price: "329 Kč" }
     ]
   },
   {
     id: 7,
     name: "Drůbež",
     items: [
-      { name: "200 gr Sweet chilli kuřecí medailonky s grilovanou zeleninou, cibulové kroužky, aioli dip", price: "259 Kč" },
-      { name: "200 gr Kachní prso se švestkovou omáčkou, šťouchaný slaninový brambor", price: "279 Kč", popular: true },
-      { name: "200 gr Kuřecí steak s bylinkovým máslem, spousta čerstvé zeleniny, chipotle majonéza a chimichurri dip", price: "259 Kč" },
-      { name: "200 gr Smažený kuřecí řízek obalený v sezamu", price: "189 Kč" },
-      { name: "200 gr Mini bramborové noky s kuřecím masem, cherry rajčátky, mozzarellou a jemnou tomatovou omáčkou", price: "249 Kč" },
-      { name: "200 gr Kuřecí jehla s parmskou šunkou, podzimní grilovaná zelenina, jemná vinná omáčka, pikantní hranolky", price: "269 Kč" }
+      { name: "200 g BBQ smoked kuřecí medailonky, restovaná jarní zelenina, cibulové kroužky, chimichurri dip", price: "279 Kč" },
+      { name: "200 g Plněné kuřecí prso s mozzarellou a sušenými rajčaty, pikantní tomatová omáčka, opečený pařížský brambor", price: "279 Kč", popular: true },
+      { name: "200 g Mini bramborové noky s kuřecím masem, špenátovými listy a smetanou", price: "249 Kč" },
+      { name: "200 g Kuřecí steak s bylinkovým máslem, spousta čerstvé zeleniny, bylinkový dip a tomatová salsa", price: "269 Kč" },
+      { name: "200 g Kachní prso s pikantní jarní zeleninou, šťouchaný bylinkový brambor", price: "299 Kč" },
+      { name: "200 g Smažený kuřecí řízek obalený v sezamu", price: "189 Kč" }
     ]
   },
   {
     id: 8,
     name: "Vepřové maso",
     items: [
-      { name: "200 gr Vepřové medailonky s hříbkovou omáčkou", price: "259 Kč" },
-      { name: "200 gr Špalíček z vepřové panenky na liškách, slaninové hráškové lusky, demi glace, cibulové kroužky, aioli dip", price: "299 Kč", popular: true },
-      { name: "200 gr Podzimní špalíček z vepřové panenky na zeleném pepři, grilovaná zelenina, cibulové chutney, aioli dip", price: "299 Kč" },
-      { name: "200 gr Řízečky z vepřové panenky v panko strouhance, šťouchaný slaninový brambor, zelný salát s křenem", price: "299 Kč" },
-      { name: "200 gr Smažený vepřový řízek", price: "189 Kč" }
+      { name: "200 g Vepřové medailonky s hříbkovou omáčkou", price: "259 Kč" },
+      { name: "200 g Marinovaný špalíček BBQ smoked, grilovaná jarní zelenina, cibulové kroužky, dip z medvědího česneku", price: "299 Kč", popular: true },
+      { name: "200 g Špalíček z vepřové panenky, pikantní hořčičná omáčka, opečený pařížský brambor, slaninový chips", price: "299 Kč" },
+      { name: "200 g Řízečky z panenky v panko strouhance, šťouchaný slaninový brambor, zelný salát s křenem", price: "299 Kč" },
+      { name: "200 g Smažený vepřový řízek", price: "189 Kč" }
     ]
   },
   {
     id: 9,
     name: "Hovězí maso",
     items: [
-      { name: "200 gr Hovězí steak na zeleném pepři, hráškové lusky se slaninou, cibulové kroužky, aioli dip", price: "379 Kč", popular: true }
+      { name: "200 g Hovězí steak na barevném pepři, pečená pikantní jarní zelenina, cibulové kroužky, dip z medvědího česneku", price: "420 Kč", popular: true }
     ]
   },
   {
     id: 10,
     name: "Přílohy",
     items: [
-      { name: "180 gr Hranolky s chedarovým přelivem posypané drcenou cibulkou se slaninou", price: "75 Kč" },
-      { name: "180 gr Batátové hranolky", price: "75 Kč" },
-      { name: "180 gr Hranolky, krokety", price: "50 Kč" },
-      { name: "150 gr Opékaný pařížský brambor", price: "50 Kč" },
-      { name: "180 gr Americký brambor", price: "50 Kč" },
-      { name: "180 gr Šťouchaný slaninový brambor", price: "50 Kč" },
-      { name: "180 gr Vařený brambor", price: "37 Kč" },
-      { name: "180 gr Bramboráčky", price: "50 Kč" },
-      { name: "150 gr Pečená zelenina", price: "69 Kč" },
-      { name: "80 gr Kečup", price: "25 Kč" },
-      { name: "80 gr Tatarská omáčka", price: "35 Kč" },
-      { name: "180 gr Zelný salát", price: "47 Kč" },
-      { name: "200 gr Míchaný salát", price: "79 Kč" }
+      { name: "180 g Hranolky s chedarovým přelivem posypané drcenou cibulkou se slaninou", price: "75 Kč" },
+      { name: "180 g Batátové hranolky", price: "75 Kč" },
+      { name: "180 g Hranolky, krokety", price: "50 Kč" },
+      { name: "150 g Opékaný pařížský brambor", price: "50 Kč" },
+      { name: "180 g Americký brambor", price: "50 Kč" },
+      { name: "180 g Bramboráčky", price: "50 Kč" },
+      { name: "180 g Šťouchaný slaninový brambor", price: "50 Kč" },
+      { name: "180 g Vařený brambor", price: "37 Kč" },
+      { name: "150 g Pečená zelenina", price: "69 Kč" },
+      { name: "200 g Míchaný salát", price: "79 Kč" },
+      { name: "180 g Zelný salát", price: "47 Kč" },
+      { name: "80 g Kečup", price: "25 Kč" },
+      { name: "80 g Tatarská omáčka", price: "35 Kč" }
     ]
   },
   {
     id: 11,
     name: "Dětské jídlo",
     items: [
-      { name: "100 gr Kuřecí řízek, hranolky, kečup", price: "179 Kč" }
+      { name: "100 g Kuřecí řízek, hranolky, kečup", price: "179 Kč" }
     ]
   },
   {
     id: 12,
     name: "Dezerty",
     items: [
+      { name: "Trhanec s vanilkovou omáčkou a malinovým rozvarem", price: "99 Kč" },
+      { name: "Čokoládové brownies s pistáciovým krémem a čerstvým ovocem", price: "99 Kč" },
       { name: "Čokoládový fondant s vanilkovou zmrzlinou", price: "105 Kč", popular: true },
       { name: "Cheesecake s malinovou omáčkou", price: "99 Kč" },
-      { name: "Horké maliny", price: "99 Kč" },
-      { name: "Palačinky s pistáciovým krémem, čokoládou a kadaif nudličky", price: "99 Kč" },
-      { name: "Podzimní lívance s jablečným rozvarem a vanilkovou omáčkou, karamelizované ořechy", price: "99 Kč" }
+      { name: "Horké maliny", price: "99 Kč" }
     ]
   }
 ];
