@@ -6,25 +6,25 @@ const menuItems = [
     id: 1,
     name: "Hovězí steak na zeleném pepři",
     description: "200 gr hovězí steak, hráškové lusky se slaninou, cibulové kroužky, aioli dip",
-    image: "/jidlo1.jpeg"
+    image: "/jidlo16.jpeg"
   },
   {
     id: 2,
     name: "Losos filet",
     description: "200 gr losos s limetkovou omáčkou a červeným pepřem, grilovaný pórek, batátové hranolky",
-    image: "/jidlo2.jpeg"
+    image: "/jidlo18.jpeg"
   },
   {
     id: 3,
     name: "Kachní prso",
     description: "200 gr kachní prso se švestkovou omáčkou, šťouchaný slaninový brambor",
-    image: "/jidlo3.jpeg"
+    image: "/jidlo19.jpeg"
   },
   {
     id: 4,
     name: "Špalíček z vepřové panenky",
     description: "200 gr špalíček na liškách, slaninové hráškové lusky, demi glace, aioli dip",
-    image: "/jidlo4.jpeg"
+    image: "/jidlo14.jpeg"
   }
 ];
 
