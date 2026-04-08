@@ -11,7 +11,7 @@ const menuItems = [
   {
     id: 2,
     name: "Losos filet",
-    description: "200 gr losos s limetkovou omáčkou a červeným pepřem, grilovaný pórek, batátové hranolky",
+    description: "200 g Losos filet s limetkovou omáčkou a zeleným chřestem, batátové hranolky",
     image: "/jidlo18.jpeg"
   },
   {
@@ -22,8 +22,8 @@ const menuItems = [
   },
   {
     id: 4,
-    name: "Špalíček z vepřové panenky",
-    description: "200 gr špalíček na liškách, slaninové hráškové lusky, demi glace, aioli dip",
+    name: "Hovězí carpaccio",
+    description: "80 g Hovězí carpaccio, parmezán, capary, bylinková bagetka",
     image: "/jidlo14.jpeg"
   }
 ];
