@@ -102,12 +102,9 @@ export function Contact() {
                     </div>
                     <div>
                       <h3 className="font-medium text-gray-900 mb-2">Email</h3>
-                      <a href="mailto:info@zamecka-restaurace.cz" className="text-orange-700 hover:text-orange-800">
-                        info@zamecka-restaurace.cz
+                      <a href="mailto:veronikabaumannova@seznam.cz" className="text-orange-700 hover:text-orange-800">
+                        veronikabaumannova@seznam.cz
                       </a>
-                      <p className="text-sm text-gray-500 mt-1">
-                        Odpovídáme do 24 hodin
-                      </p>
                     </div>
                   </div>
                 </div>
