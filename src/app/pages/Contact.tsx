@@ -85,8 +85,11 @@ export function Contact() {
                     </div>
                     <div>
                       <h3 className="font-medium text-gray-900 mb-2">Telefon</h3>
-                      <a href="tel:+420379423483" className="text-orange-700 hover:text-orange-800 text-lg">
+                      <a href="tel:+420379423483" className="text-orange-700 hover:text-orange-800 text-lg block">
                         +420 379 423 483
+                      </a>
+                      <a href="tel:+420777251953" className="text-orange-700 hover:text-orange-800 text-lg block">
+                        +420 777 251 953
                       </a>
                       <p className="text-sm text-gray-500 mt-1">
                         Rezervace pouze telefonicky
@@ -149,7 +152,8 @@ export function Contact() {
                 <Phone className="text-orange-600 flex-shrink-0 mt-0.5" size={20} />
                 <p className="text-orange-800 text-sm">
                   <strong>Rezervace stolů jsou pouze telefonicky</strong> na čísle{" "}
-                  <a href="tel:+420379423483" className="underline hover:text-orange-900">+420 379 423 483</a>.
+                  <a href="tel:+420379423483" className="underline hover:text-orange-900">+420 379 423 483</a>{" "}
+                  nebo <a href="tel:+420777251953" className="underline hover:text-orange-900">+420 777 251 953</a>.
                   Tento formulář slouží pro obecné dotazy.
                 </p>
               </div>
