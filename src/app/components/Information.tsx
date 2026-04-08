@@ -36,8 +36,11 @@ export function Information() {
             </div>
             <h3 className="text-xl font-medium text-gray-900 mb-2">Rezervace</h3>
             <p className="text-gray-600 leading-relaxed">
-              <a href="tel:+420379423483" className="hover:text-orange-700 transition-colors">
+              <a href="tel:+420379423483" className="hover:text-orange-700 transition-colors block">
                 +420 379 423 483
+              </a>
+              <a href="tel:+420777251953" className="hover:text-orange-700 transition-colors block">
+                +420 777 251 953
               </a>
             </p>
             <p className="text-sm text-gray-500 mt-1">pouze telefonicky</p>
