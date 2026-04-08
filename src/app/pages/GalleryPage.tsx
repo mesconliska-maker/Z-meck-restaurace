@@ -22,6 +22,8 @@ const galleryImages = [
   { id: 17, src: "/jidlo17.jpeg", alt: "Jídlo", category: "Jídla" },
   { id: 18, src: "/jidlo18.jpeg", alt: "Jídlo", category: "Jídla" },
   { id: 19, src: "/jidlo19.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 26, src: "/sladky.jpeg", alt: "Jídlo", category: "Jídla" },
+  { id: 27, src: "/sladky2.jpeg", alt: "Jídlo", category: "Jídla" },
   { id: 20, src: "/prostor1.jpeg", alt: "Prostor restaurace", category: "Prostor" },
   { id: 21, src: "/prostor2.jpeg", alt: "Prostor restaurace", category: "Prostor" },
   { id: 22, src: "/prostor3.jpeg", alt: "Prostor restaurace", category: "Prostor" },
