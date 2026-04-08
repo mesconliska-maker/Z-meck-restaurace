@@ -72,8 +72,8 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <Mail size={18} className="flex-shrink-0" />
-                <a href="mailto:info@zamecka-restaurace.cz" className="text-sm hover:text-orange-600 transition-colors">
-                  info@zamecka-restaurace.cz
+                <a href="mailto:veronikabaumannova@seznam.cz" className="text-sm hover:text-orange-600 transition-colors">
+                  veronikabaumannova@seznam.cz
                 </a>
               </div>
             </div>
