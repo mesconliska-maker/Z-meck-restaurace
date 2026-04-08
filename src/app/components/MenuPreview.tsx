@@ -16,9 +16,9 @@ const menuItems = [
   },
   {
     id: 3,
-    name: "Kachní prso",
-    description: "200 gr kachní prso se švestkovou omáčkou, šťouchaný slaninový brambor",
-    image: "/jidlo19.jpeg"
+    name: "Trhanec",
+    description: "Trhanec s vanilkovou omáčkou a malinovým rozvarem",
+    image: "/sladky.jpeg"
   },
   {
     id: 4,
