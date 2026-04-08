@@ -8,7 +8,7 @@ export function About() {
           {/* Image */}
           <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl">
             <ImageWithFallback
-              src="https://images.unsplash.com/photo-1756397481872-ed981ef72a51?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwcmVzdGF1cmFudCUyMGludGVyaW9yJTIwdGFibGVzfGVufDF8fHx8MTc3MjQ0MTQ2NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+              src="/prostor1.jpeg"
               alt="Restaurant interior"
               className="w-full h-full object-cover"
             />
