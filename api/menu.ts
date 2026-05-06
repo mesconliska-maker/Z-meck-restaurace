@@ -68,15 +68,19 @@ function parseDayHeader(text: string): { day: string; date: string } | null {
 function parseMenu(html: string): DayMenu[] {
   const $ = cheerio.load(html);
 
+  // Nejdřív vyhodíme všechny <style>, <script>, <noscript> elementy,
+  // ať se nám do textu nedostane CSS / JS kód.
+  $("style, script, noscript").remove();
+
   // Najdeme element obsahující "Menu:" hlavičku se sloupcem časem podávání.
   // Tohle je dostatečně robustní – nezávisí na konkrétní třídě.
   const bodyText = $("body").text();
   const menuStart = bodyText.search(/Menu:\s*\d{1,2}:\d{2}/);
   if (menuStart === -1) return [];
 
-  // Useknu vše před "Menu:" a vše za patičkou (Nahlásit nepřesné údaje / text)
+  // Useknu vše před "Menu:" a vše za patičkou (Nahlásit nepřesné údaje)
   let menuSection = bodyText.slice(menuStart);
-  const cutoff = menuSection.search(/Nahlásit nepřesné údaje|# text|# Nahlásit/);
+  const cutoff = menuSection.search(/Nahlásit nepřesné údaje|Vyberte, čeho/);
   if (cutoff > 0) menuSection = menuSection.slice(0, cutoff);
 
   // Rozdělím sekci na řádky a vyčistím prázdné
@@ -90,6 +94,13 @@ function parseMenu(html: string): DayMenu[] {
   let current: DayMenu | null = null;
 
   for (const line of lines) {
+    // Přeskoč CSS pravidla, HTML značky a podobné smetí — nikdy to není
+    // jídlo/polévka. Detekce: obsahuje { } ; složené závorky CSS, nebo začíná .
+    if (/[{};]/.test(line)) continue;
+    if (/^\.[a-zA-Z-]/.test(line)) continue; // CSS selektor jako .ui-dialog
+    if (/^@[a-zA-Z-]/.test(line)) continue; // @media, @keyframes
+    if (line.length > 200) continue; // moc dlouhý řádek = určitě smetí
+
     // Hlavička dne? "Středa 6.5.2026"
     const header = parseDayHeader(line);
     if (header) {
