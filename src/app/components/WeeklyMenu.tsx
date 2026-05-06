@@ -78,11 +78,17 @@ export function WeeklyMenu() {
         // Doplníme isToday podle aktuálního dne (i když API už isToday nastavuje, dáme to ještě jednou pro jistotu)
         const withToday = parsed.map((d) => ({ ...d, isToday: d.day === today }));
 
-        // Když API nevrátilo nic (parser selhal nebo menička.cz je dole),
+        // Odfiltrujeme dny, kde Robert ještě nic nezadal — ty nemá smysl ukazovat
+        // (typicky příští týden, který ještě není vyplněný).
+        const cleaned = withToday.filter(
+          (d) => !(d.note && /nebylo zadáno menu/i.test(d.note) && !d.soup && d.meals.length === 0)
+        );
+
+        // Když API nevrátilo nic použitelného (parser selhal nebo menička.cz je dole),
         // ukážeme fallback menu místo prázdné stránky.
         setMenu(
-          withToday.length > 0
-            ? withToday
+          cleaned.length > 0
+            ? cleaned
             : fallbackMenu.map((d) => ({ ...d, isToday: d.day === today }))
         );
       })
