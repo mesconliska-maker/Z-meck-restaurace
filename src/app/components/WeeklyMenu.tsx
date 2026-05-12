@@ -12,10 +12,8 @@ interface DayMenu {
   isToday: boolean;
   soup: string;
   meals: Meal[];
+  note?: string;
 }
-
-const SHEET_ID = "1OJp1WUjXfYEXAOIh4AM08gBg4JumJS0Yd8DDlXi1API";
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
 const fallbackMenu: DayMenu[] = [
   {
@@ -65,19 +63,6 @@ function getTodayDay(): string {
   return days[new Date().getDay()];
 }
 
-function formatDate(value: any): string {
-  if (!value) return "";
-  // Google Sheets vrací datum jako "Date(2026,3,3)" — měsíc je 0-indexed
-  if (typeof value === "string" && value.startsWith("Date(")) {
-    const parts = value.replace("Date(", "").replace(")", "").split(",");
-    const year = parseInt(parts[0]);
-    const month = parseInt(parts[1]) + 1; // +1 protože je 0-indexed
-    const day = parseInt(parts[2]);
-    return `${day}.${month}.${year}`;
-  }
-  return String(value);
-}
-
 export function WeeklyMenu() {
   const [menu, setMenu] = useState<DayMenu[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,32 +70,30 @@ export function WeeklyMenu() {
   useEffect(() => {
     const today = getTodayDay();
 
-    fetch(SHEET_URL)
-      .then((res) => res.text())
-      .then((text) => {
-        const json = JSON.parse(
-          text.replace("/*O_o*/\ngoogle.visualization.Query.setResponse(", "").replace(");", "")
+    fetch("/api/menu")
+      .then((res) => res.json())
+      .then((data) => {
+        const parsed: DayMenu[] = Array.isArray(data?.menu) ? data.menu : [];
+
+        // Doplníme isToday podle aktuálního dne (i když API už isToday nastavuje, dáme to ještě jednou pro jistotu)
+        const withToday = parsed.map((d) => ({ ...d, isToday: d.day === today }));
+
+        // Odfiltrujeme dny, kde Robert ještě nic nezadal — ty nemá smysl ukazovat
+        // (typicky příští týden, který ještě není vyplněný).
+        const cleaned = withToday.filter(
+          (d) => !(d.note && /nebylo zadáno menu/i.test(d.note) && !d.soup && d.meals.length === 0)
         );
-        const rows = json.table.rows;
 
-        const parsed: DayMenu[] = rows
-          .filter((row: any) => row.c[0]?.v)
-          .map((row: any) => ({
-            day: row.c[0]?.v || "",
-            date: formatDate(row.c[1]?.v),
-            isToday: (row.c[0]?.v || "") === today,
-            soup: row.c[2]?.v || "",
-            meals: [
-              { number: "1", name: row.c[3]?.v || "" },
-              { number: "2", name: row.c[4]?.v || "" },
-            ],
-          }));
-
-        setMenu(parsed.length > 0 ? parsed : fallbackMenu.map(d => ({ ...d, isToday: d.day === today })));
+        // Když API nevrátilo nic použitelného (parser selhal nebo menička.cz je dole),
+        // ukážeme fallback menu místo prázdné stránky.
+        setMenu(
+          cleaned.length > 0
+            ? cleaned
+            : fallbackMenu.map((d) => ({ ...d, isToday: d.day === today }))
+        );
       })
       .catch(() => {
-        const today = getTodayDay();
-        setMenu(fallbackMenu.map(d => ({ ...d, isToday: d.day === today })));
+        setMenu(fallbackMenu.map((d) => ({ ...d, isToday: d.day === today })));
       })
       .finally(() => setLoading(false));
   }, []);
@@ -169,26 +152,46 @@ export function WeeklyMenu() {
                   )}
                 </div>
 
-                <div className="mb-4 pb-4 border-b border-gray-100">
-                  <div className="flex items-start gap-2">
-                    <UtensilsCrossed size={18} className="text-orange-700 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Polévka</p>
-                      <p className="text-gray-900 leading-snug">{day.soup}</p>
+                {/* Speciální stav (svátek, nezadané menu) — zobrazíme místo polévky+jídel */}
+                {day.note && day.meals.length === 0 && !day.soup && (
+                  <div className="py-4 text-center">
+                    <p className="text-gray-600 italic">{day.note}</p>
+                  </div>
+                )}
+
+                {/* Polévka (jen když existuje) */}
+                {day.soup && (
+                  <div className="mb-4 pb-4 border-b border-gray-100">
+                    <div className="flex items-start gap-2">
+                      <UtensilsCrossed size={18} className="text-orange-700 mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Polévka</p>
+                        <p className="text-gray-900 leading-snug">{day.soup}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
-                <div className="space-y-3">
-                  {day.meals.map((meal, mealIndex) => (
-                    <div key={mealIndex} className="flex items-start gap-3">
-                      <div className="w-7 h-7 bg-gradient-to-br from-orange-600 to-orange-700 text-white rounded-full flex items-center justify-center font-medium text-sm flex-shrink-0">
-                        {meal.number}
+                {/* Hlavní jídla */}
+                {day.meals.length > 0 && (
+                  <div className="space-y-3">
+                    {day.meals.map((meal, mealIndex) => (
+                      <div key={mealIndex} className="flex items-start gap-3">
+                        <div className="w-7 h-7 bg-gradient-to-br from-orange-600 to-orange-700 text-white rounded-full flex items-center justify-center font-medium text-sm flex-shrink-0">
+                          {meal.number}
+                        </div>
+                        <p className="text-gray-700 leading-snug pt-0.5">{meal.name}</p>
                       </div>
-                      <p className="text-gray-700 leading-snug pt-0.5">{meal.name}</p>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Pokud je note + zároveň jsou jídla, ukaž note jako poznámku navíc */}
+                {day.note && (day.meals.length > 0 || day.soup) && (
+                  <p className="text-sm text-gray-500 italic mt-3 pt-3 border-t border-gray-100">
+                    {day.note}
+                  </p>
+                )}
               </div>
             ))}
           </div>
