@@ -95,6 +95,37 @@ function parseMenu(html: string, debugLines?: string[]): DayMenu[] {
   const days: DayMenu[] = [];
   let current: DayMenu | null = null;
 
+  // Menička.cz teď obaluje KAŽDÉ SLOVO polévky/jídla zvlášť (nejspíš kvůli
+  // alergenům), takže "1. Hovězí maso, svíčková..." přijde jako sekvence
+  // samostatných řádků: "1.", "Hovězí", "maso,", "svíčková", ...
+  // Datum dne a text "Pro tento den nebylo zadáno menu." naopak přichází
+  // vcelku. Proto slova průběžně skládáme do bufferu a "vyklopíme" je
+  // (jako polévku, jídlo, nebo poznámku) až ve chvíli, kdy narazíme na
+  // další značku – číslo jídla, další den, nebo konec.
+  let buffer: string[] = [];
+  let pendingMealNumber: string | null = null;
+
+  const flushBuffer = () => {
+    if (!current || buffer.length === 0) {
+      buffer = [];
+      return;
+    }
+    const text = buffer.join(" ").trim();
+    buffer = [];
+
+    if (pendingMealNumber) {
+      if (text) current.meals.push({ number: pendingMealNumber, name: text });
+      pendingMealNumber = null;
+      return;
+    }
+
+    if (/Svátek|otevřeno|nebylo zadáno menu/i.test(text)) {
+      current.note = text;
+    } else if (!current.soup) {
+      current.soup = text;
+    }
+  };
+
   for (const line of lines) {
     // Přeskoč CSS pravidla, HTML značky a podobné smetí — nikdy to není
     // jídlo/polévka. Detekce: obsahuje { } ; složené závorky CSS, nebo začíná .
@@ -103,9 +134,10 @@ function parseMenu(html: string, debugLines?: string[]): DayMenu[] {
     if (/^@[a-zA-Z-]/.test(line)) continue; // @media, @keyframes
     if (line.length > 200) continue; // moc dlouhý řádek = určitě smetí
 
-    // Hlavička dne? "Středa 6.5.2026"
+    // Hlavička dne? "Středa 6.5.2026" (přichází vcelku, ne po slovech)
     const header = parseDayHeader(line);
     if (header) {
+      flushBuffer();
       if (current) days.push(current);
       current = {
         day: header.day,
@@ -119,28 +151,22 @@ function parseMenu(html: string, debugLines?: string[]): DayMenu[] {
 
     if (!current) continue;
 
-    // Speciální texty — svátek, prázdný den
-    if (/Svátek|otevřeno|Pro tento den nebylo zadáno menu/i.test(line)) {
-      current.note = line.replace(/^[-•]\s*/, "").trim();
+    // Číslo jídla – buď samostatně na řádku ("1."), nebo (starší formát)
+    // rovnou s textem na stejném řádku ("1. Pečené vepřové kostky...").
+    const mealMarker = line.match(/^(\d{1,2})\.\s*(.*)$/);
+    if (mealMarker) {
+      flushBuffer(); // uzavře polévku (nebo předchozí jídlo)
+      pendingMealNumber = mealMarker[1];
+      if (mealMarker[2]) buffer.push(mealMarker[2]);
       continue;
     }
 
-    // Číslované jídlo? "1. Pečené vepřové kostky..."
-    const mealMatch = line.match(/^(\d+)\.\s*(.+)$/);
-    if (mealMatch) {
-      current.meals.push({
-        number: mealMatch[1],
-        name: mealMatch[2].trim(),
-      });
-      continue;
-    }
-
-    // Vše ostatní bez čísla považuju za polévku (typicky první řádek po hlavičce)
-    if (!current.soup) {
-      current.soup = line.replace(/^[-•]\s*/, "").trim();
-    }
+    // Vše ostatní jsou slova polévky/jídla/poznámky – jen sbíráme do bufferu,
+    // rozhodnutí co to je (polévka vs. poznámka) padne až ve flushBuffer().
+    buffer.push(line.replace(/^[-•]\s*/, "").trim());
   }
 
+  flushBuffer();
   if (current) days.push(current);
   return days;
 }
