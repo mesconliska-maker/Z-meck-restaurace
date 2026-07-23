@@ -143,6 +143,78 @@ function parseMenu(html: string): DayMenu[] {
   return days;
 }
 
+/**
+ * Normalizuje název kódování (z HTTP hlavičky nebo <meta charset>) na label,
+ * který zná iconv-lite.
+ */
+function normalizeCharset(label: string): string {
+  const l = label.trim().toLowerCase();
+  if (/^utf-?8$/.test(l)) return "utf-8";
+  if (/^(windows-1250|cp1250|win-1250|x-cp1250)$/.test(l)) return "windows-1250";
+  if (/^(iso-8859-2|latin2|latin-2)$/.test(l)) return "iso-8859-2";
+  return l || "utf-8";
+}
+
+/**
+ * Zkusí zjistit kódování stránky z:
+ *  1) Content-Type hlavičky odpovědi (charset=...)
+ *  2) <meta charset="..."> nebo <meta http-equiv="Content-Type" content="...charset=...">
+ * Když nic nenajde, vrátí null (volající pak rozhodne fallback).
+ *
+ * Tohle je záměrně odolné vůči tomu, že menička.cz může kódování v budoucnu
+ * zase změnit (přesně tohle se stalo — dřív posílali windows-1250, teď UTF-8,
+ * a natvrdo zapsané "windows-1250" pak rozbíjelo veškerou diakritiku).
+ */
+function detectCharsetFromHeader(contentTypeHeader: string | null): string | null {
+  if (!contentTypeHeader) return null;
+  const match = contentTypeHeader.match(/charset=([^;]+)/i);
+  return match ? normalizeCharset(match[1]) : null;
+}
+
+function detectCharsetFromMeta(buffer: Buffer): string | null {
+  // Prvních pár KB stačí – <meta> je vždy v <head>. Dekódujeme jako latin1
+  // (1 byte = 1 znak), protože ASCII část hlavičky (meta tagy, atributy)
+  // vypadá stejně bez ohledu na skutečné kódování stránky.
+  const head = buffer.slice(0, 2048).toString("latin1");
+  const metaCharset = head.match(/<meta[^>]+charset=["']?([a-zA-Z0-9_-]+)/i);
+  if (metaCharset) return normalizeCharset(metaCharset[1]);
+  return null;
+}
+
+/**
+ * Je buffer platný UTF-8? Používáme jako spolehlivý test skutečného
+ * kódování – windows-1250 text s diakritikou (vysoké bajty 0x80–0xFF)
+ * téměř nikdy netvoří platné vícebajtové UTF-8 sekvence, takže striktní
+ * dekodér na něm spolehlivě spadne. Mnohem přesnější než hledání
+ * konkrétních "mojibake" znaků v textu.
+ */
+function isValidUtf8(buffer: Buffer): boolean {
+  try {
+    new TextDecoder("utf-8", { fatal: true }).decode(buffer);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function decodeMenickaHtml(buffer: Buffer, contentTypeHeader: string | null): string {
+  const declared = detectCharsetFromHeader(contentTypeHeader) ?? detectCharsetFromMeta(buffer);
+
+  // Pokud stránka sama tvrdí, že je windows-1250/iso-8859-2 (ne-UTF8),
+  // a bajty skutečně nejsou platné UTF-8, věříme deklaraci.
+  if (declared && declared !== "utf-8" && !isValidUtf8(buffer)) {
+    return iconv.decode(buffer, declared);
+  }
+
+  // Ve všech ostatních případech: platné UTF-8 bajty → je to UTF-8
+  // (ať už deklarace říká cokoli). Menička.cz historicky posílala
+  // windows-1250, teď posílá UTF-8 – tenhle test funguje správně pro obě.
+  if (isValidUtf8(buffer)) return iconv.decode(buffer, "utf-8");
+
+  // Bajty nejsou platné UTF-8 → skoro jistě windows-1250 (starý formát menička.cz).
+  return iconv.decode(buffer, declared ?? "windows-1250");
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const response = await fetch(MENICKA_URL, {
@@ -158,9 +230,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ menu: [], error: `menicka.cz returned ${response.status}` });
     }
 
-    // Menička.cz posílá obsah v kódování windows-1250 → musíme dekódovat
+    // Kódování stránky zjišťujeme dynamicky (Content-Type hlavička → <meta charset>
+    // → utf-8 default), s mojibake pojistkou. Menička.cz totiž mezitím přešla
+    // z windows-1250 na UTF-8, a natvrdo zapsané windows-1250 rozbíjelo diakritiku
+    // (a tím i detekci dnů v týdnu, protože "Pondělí", "Úterý" apod. přestaly sedět).
     const buffer = Buffer.from(await response.arrayBuffer());
-    const html = iconv.decode(buffer, "windows-1250");
+    const html = decodeMenickaHtml(buffer, response.headers.get("content-type"));
 
     const menu = parseMenu(html);
 
