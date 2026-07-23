@@ -65,7 +65,7 @@ function parseDayHeader(text: string): { day: string; date: string } | null {
  * vykreslují — proto parser pracuje text-based přístupem na celé
  * sekci menu, ne na konkrétních CSS selektorech.
  */
-function parseMenu(html: string, debugLines?: string[]): DayMenu[] {
+function parseMenu(html: string): DayMenu[] {
   const $ = cheerio.load(html);
 
   // Nejdřív vyhodíme všechny <style>, <script>, <noscript> elementy,
@@ -88,8 +88,6 @@ function parseMenu(html: string, debugLines?: string[]): DayMenu[] {
     .split("\n")
     .map((l) => l.trim())
     .filter(Boolean);
-
-  if (debugLines) debugLines.push(...lines);
 
   const today = getTodayDay();
   const days: DayMenu[] = [];
@@ -264,20 +262,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // (a tím i detekci dnů v týdnu, protože "Pondělí", "Úterý" apod. přestaly sedět).
     const buffer = Buffer.from(await response.arrayBuffer());
     const html = decodeMenickaHtml(buffer, response.headers.get("content-type"));
-
-    // Dočasný debug režim (?debug=1): vrátí syrové řádky, jak je parser vidí,
-    // ať můžeme přesně zjistit, kde se teď menička.cz liší strukturou.
-    // AŽ TO DOLADÍME, TENHLE BLOK ZASE ODSTRANÍME.
-    if (req.query.debug) {
-      const debugLines: string[] = [];
-      const menu = parseMenu(html, debugLines);
-      res.setHeader("Cache-Control", "no-store");
-      return res.status(200).json({
-        menu,
-        debugLines: debugLines.slice(0, 80),
-        htmlSnippet: html.slice(0, 500),
-      });
-    }
 
     const menu = parseMenu(html);
 
