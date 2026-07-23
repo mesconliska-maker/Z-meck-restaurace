@@ -4,14 +4,14 @@ import { Link } from "react-router";
 const menuItems = [
   {
     id: 1,
-    name: "Hovězí steak na zeleném pepři",
-    description: "200 gr hovězí steak, hráškové lusky se slaninou, cibulové kroužky, aioli dip",
+    name: "Hovězí steak na barevném pepři",
+    description: "200 g hovězí steak na barevném pepři, hráškové lusky se slaninou, cibulové kroužky, creme fraiche",
     image: "/jidlo16.jpeg"
   },
   {
     id: 2,
     name: "Losos filet",
-    description: "200 g Losos filet s limetkovou omáčkou a zeleným chřestem, batátové hranolky",
+    description: "200 g Losos filet s mangovo-limetkovou omáčkou, wakame salátek, batátové hranolky",
     image: "/jidlo18.jpeg"
   },
   {
