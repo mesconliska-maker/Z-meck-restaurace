@@ -135,7 +135,7 @@ export function WeeklyMenu() {
             {menu.map((day, index) => (
               <div
                 key={index}
-                className={`bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border-2 ${
+                className={`bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border-2 wrap-anywhere ${
                   day.isToday
                     ? "border-orange-600 ring-2 ring-orange-100"
                     : "border-gray-100 hover:border-orange-100"
