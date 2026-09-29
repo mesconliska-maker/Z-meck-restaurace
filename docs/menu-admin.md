@@ -21,16 +21,24 @@ v `supabase/schema.sql`.
 Dokud je konfigurace prázdná, `/admin` běží v **demo režimu** (ukládá do
 localStorage prohlížeče) – dá se tak vyzkoušet bez databáze.
 
-## Zprovoznění (jednorázově)
+## Aktuální nasazení
 
-1. Založit projekt na <https://supabase.com> (Free tier, region *Central EU – Frankfurt*).
-2. SQL Editor → vložit celý `supabase/schema.sql` → Run.
-3. Authentication → Sign In / Providers → Email: vypnout **Allow new users to sign up**.
-4. Authentication → Users → Add user → e-mail + heslo klienta (zaškrtnout *Auto Confirm*).
-5. SQL Editor: `insert into public.menu_editors (email) values ('email@klienta.cz');` (malými písmeny)
-6. Project Settings → API: zkopírovat *Project URL* a *publishable/anon key* do
-   `FALLBACK_SUPABASE_URL` a `FALLBACK_SUPABASE_ANON_KEY` v `src/app/admin/lib/config.ts`.
-7. Merge do `main` → Vercel nasadí, administrace je na `https://www.zamecka-htyn.cz/admin`.
+- Supabase organizace **ComvioApp**, projekt `rrzhyynllgbtyorvrnbg` (Frankfurt, eu-central-1),
+  dashboard: <https://supabase.com/dashboard/project/rrzhyynllgbtyorvrnbg>
+- `supabase/schema.sql` je spuštěné, URL a publishable klíč jsou v `src/app/admin/lib/config.ts`.
+
+### Zbývá ručně (vyžaduje roli Owner/Admin v dashboardu)
+
+1. Authentication → Sign In / Providers → Email: vypnout **Allow new users to sign up**.
+2. Authentication → Users → Add user → e-mail + heslo klienta, zaškrtnout *Auto Confirm User*.
+3. SQL Editor: `insert into public.menu_editors (email) values ('email@klienta.cz');` (malými písmeny).
+   Bez tohoto řádku se klient přihlásí, ale administrace ukáže „Účet nemá oprávnění upravovat menu“.
+
+### Nový projekt od nuly
+
+Založit projekt (Frankfurt) → spustit `supabase/schema.sql` → body 1–3 výše →
+*Project URL* a *publishable key* do `FALLBACK_SUPABASE_URL` / `FALLBACK_SUPABASE_ANON_KEY`
+v `src/app/admin/lib/config.ts`.
 
 Pozn.: Free projekt Supabase se po 7 dnech **bez jakéhokoli provozu** uspí. Po
 napojení veřejného webu (dotaz při každé návštěvě) k tomu prakticky nedojde;

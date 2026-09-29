@@ -48,7 +48,8 @@ export async function fetchCurrentWeekMenu(): Promise<PublicDayMenu[] | null> {
   if (!PUBLIC_SITE_CONNECTED || !isSupabaseConfigured) return null;
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/current_week_menu?select=*`, {
-      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+      // publishable klíč (sb_publishable_…) není JWT – posílá se jen v hlavičce apikey
+      headers: { apikey: SUPABASE_ANON_KEY },
     });
     if (!res.ok) return null;
     const rows = await res.json();

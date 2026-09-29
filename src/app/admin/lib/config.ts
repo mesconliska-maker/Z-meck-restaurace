@@ -9,8 +9,8 @@
 // Dokud jsou hodnoty prázdné, administrace běží v DEMO režimu: data se ukládají
 // jen do localStorage tohoto prohlížeče.
 
-const FALLBACK_SUPABASE_URL = "";
-const FALLBACK_SUPABASE_ANON_KEY = "";
+const FALLBACK_SUPABASE_URL = "https://rrzhyynllgbtyorvrnbg.supabase.co";
+const FALLBACK_SUPABASE_ANON_KEY = "sb_publishable_N1U2uZ70sQLBqwLf5ui5NQ_I8xjidI2";
 
 export const SUPABASE_URL: string =
   import.meta.env.VITE_SUPABASE_URL || FALLBACK_SUPABASE_URL;
