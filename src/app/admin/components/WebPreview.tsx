@@ -16,7 +16,7 @@ export function WebPreview({ week, today }: { week: WeekMenu; today: string }) {
         {days.map((day) => (
           <div
             key={day.date}
-            className={`rounded-xl border-2 bg-white p-5 shadow-lg ${
+            className={`wrap-anywhere rounded-xl border-2 bg-white p-5 shadow-lg ${
               day.isToday ? "border-orange-600 ring-2 ring-orange-100" : "border-gray-100"
             }`}
           >

@@ -2,6 +2,10 @@ import { Font } from "@react-pdf/renderer";
 
 let registeredBase: string | null = null;
 
+// Nejdelší běžná česká slova v jídelníčku mají kolem 15–18 znaků.
+const MAX_UNBROKEN = 22;
+const CHUNK = 14;
+
 /**
  * Zaregistruje fonty webu (Cormorant Garamond + Inter) pro PDF.
  * Statické TTF leží v /public/fonts/pdf – react-pdf neumí variabilní fonty
@@ -28,6 +32,10 @@ export function registerPdfFonts(assetBase: string) {
       { src: f("Inter-SemiBold.ttf"), fontWeight: 600 },
     ],
   });
-  // Výchozí dělení slov je anglické a češtinu láme nesmyslně – vypínáme.
-  Font.registerHyphenationCallback((word) => [word]);
+  // Výchozí dělení slov je anglické a češtinu láme nesmyslně – běžná slova
+  // proto nedělíme. Jen extrémně dlouhé "slovo" bez mezer (překlep, vložený
+  // odkaz…) rozsekáme na kousky, jinak by přeteklo přes okraj a přes ceny.
+  Font.registerHyphenationCallback((word) =>
+    word.length > MAX_UNBROKEN ? (word.match(new RegExp(`.{1,${CHUNK}}`, "gu")) ?? [word]) : [word],
+  );
 }
