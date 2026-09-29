@@ -36,16 +36,15 @@ Pozn.: Free projekt Supabase se po 7 dnech **bez jakéhokoli provozu** uspí. Po
 napojení veřejného webu (dotaz při každé návštěvě) k tomu prakticky nedojde;
 do té doby stačí, že klient administraci používá každý týden.
 
-## Napojení veřejného webu (až po otestování)
+## Přepnutí veřejného webu (až po otestování)
 
-Veřejná sekce „Menu tohoto týdne“ (`src/app/components/WeeklyMenu.tsx`) zatím
-dál čte `/api/menu` (menicka.cz). Pro přepnutí:
+Kód je připravený, stačí v `src/app/admin/lib/config.ts` nastavit
+`PUBLIC_SITE_CONNECTED = true` a mergnout.
 
-1. Ve `WeeklyMenu.tsx` nejdřív zavolat `fetchCurrentWeekMenu()` ze
-   `src/app/lib/weeklyMenuSource.ts`; když vrátí `null`, pokračovat stávajícím
-   `fetch("/api/menu")` a fallbackem. Data mají stejný tvar jako z `/api/menu`.
-2. Nastavit `PUBLIC_SITE_CONNECTED = true` v `src/app/admin/lib/config.ts`
-   (zmizí upozornění „Testovací provoz“).
+Sekce „Menu tohoto týdne“ pak nejdřív zkusí zveřejněné menu aktuálního týdne
+z administrace; když žádné není nebo databáze neodpovídá, použije jako dosud
+`/api/menu` (menicka.cz) a nakonec pevný fallback. Dokud je přepínač `false`,
+web se na databázi vůbec neptá.
 
 ## Vývoj
 

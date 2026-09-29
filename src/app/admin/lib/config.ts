@@ -21,8 +21,9 @@ export const SUPABASE_ANON_KEY: string =
 export const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
 /**
- * Čte už veřejná sekce „Menu tohoto týdne“ z této databáze?
- * Dokud je false, administrace upozorňuje, že web pořád ukazuje menicka.cz.
- * Přepnout na true spolu s napojením WeeklyMenu.tsx (viz lib/weeklyMenuSource.ts).
+ * PŘEPÍNAČ VEŘEJNÉHO WEBU. Čte sekce „Menu tohoto týdne“ z této databáze?
+ *  - false: web dál ukazuje menicka.cz, administrace hlásí „Testovací provoz“
+ *  - true:  web ukazuje zveřejněné menu z administrace; když pro aktuální týden
+ *           žádné není (nebo DB neodpovídá), automaticky menicka.cz jako dřív
  */
 export const PUBLIC_SITE_CONNECTED = false;

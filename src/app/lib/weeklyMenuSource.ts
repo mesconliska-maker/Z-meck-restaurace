@@ -1,12 +1,11 @@
 // Připravené napojení veřejné sekce „Menu tohoto týdne“ na vlastní databázi.
 //
-// ZATÍM SE NIKDE NEPOUŽÍVÁ – veřejný web dál čte /api/menu (menicka.cz).
-// Po otestování administrace stačí ve WeeklyMenu.tsx nejdřív zavolat
-// fetchCurrentWeekMenu() a teprve když vrátí null, pokračovat stávajícím
-// fetch("/api/menu") + fallbackem. Žádná závislost navíc (jen fetch na REST
-// API Supabase), takže se veřejný bundle nezvětší.
+// WeeklyMenu.tsx volá fetchCurrentWeekMenu() jako první zdroj; když vrátí null,
+// pokračuje stávajícím /api/menu (menicka.cz) a fallbackem. Dokud je
+// PUBLIC_SITE_CONNECTED = false, vrací se null hned bez dotazu – veřejný web
+// se chová přesně jako dřív. Žádná závislost navíc (jen fetch na REST API).
 
-import { SUPABASE_ANON_KEY, SUPABASE_URL, isSupabaseConfigured } from "../admin/lib/config";
+import { PUBLIC_SITE_CONNECTED, SUPABASE_ANON_KEY, SUPABASE_URL, isSupabaseConfigured } from "../admin/lib/config";
 import { filledMeals, isNoteOnlyDay, normalizeWeek } from "../admin/lib/menu";
 import type { WeekMenu } from "../admin/lib/types";
 import { dayName, formatCompact, pragueDate } from "../admin/lib/week";
@@ -46,7 +45,7 @@ export function toPublicDays(week: WeekMenu, today: string = pragueDate()): Publ
  * zveřejněné nebo nastala chyba – volající pak použije stávající zdroj.
  */
 export async function fetchCurrentWeekMenu(): Promise<PublicDayMenu[] | null> {
-  if (!isSupabaseConfigured) return null;
+  if (!PUBLIC_SITE_CONNECTED || !isSupabaseConfigured) return null;
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/current_week_menu?select=*`, {
       headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
