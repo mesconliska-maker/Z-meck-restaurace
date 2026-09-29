@@ -1,5 +1,6 @@
 import { Calendar, UtensilsCrossed, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { fetchCurrentWeekMenu } from "../lib/weeklyMenuSource";
 
 interface Meal {
   number: string;
@@ -70,11 +71,16 @@ export function WeeklyMenu() {
   useEffect(() => {
     const today = getTodayDay();
 
-    fetch("/api/menu")
-      .then((res) => res.json())
-      .then((data) => {
-        const parsed: DayMenu[] = Array.isArray(data?.menu) ? data.menu : [];
-
+    // Nejdřív vlastní administrace (/admin); dokud není zapnutá
+    // (PUBLIC_SITE_CONNECTED), vrací null a jede se postaru přes menicka.cz.
+    fetchCurrentWeekMenu()
+      .then((own) =>
+        own ??
+        fetch("/api/menu")
+          .then((res) => res.json())
+          .then((data) => (Array.isArray(data?.menu) ? data.menu : []))
+      )
+      .then((parsed: DayMenu[]) => {
         // Doplníme isToday podle aktuálního dne (i když API už isToday nastavuje, dáme to ještě jednou pro jistotu)
         const withToday = parsed.map((d) => ({ ...d, isToday: d.day === today }));
 
