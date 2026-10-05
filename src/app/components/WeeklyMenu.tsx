@@ -18,43 +18,43 @@ interface DayMenu {
 
 const fallbackMenu: DayMenu[] = [
   {
-    day: "Pondělí", date: "7.4.2026", isToday: false,
-    soup: "Masový vývar se zeleninou a játrovými knedlíčky",
+    day: "Pondělí", date: "5.10.2026", isToday: false,
+    soup: "Kuřecí vývar se zeleninou a strouháním",
     meals: [
-      { number: "1", name: "Zapečené šunkofleky s chedarem, kyselá okurka" },
-      { number: "2", name: "Kuřecí medailonky s pikantní hořčičnou omáčkou, divoká rýže" }
+      { number: "1", name: "Plněný brambor s kuřecím masem a pikantní sýrovou omáčkou, strouhaný sýr" },
+      { number: "2", name: "Vepřové medailonky po argentinsku, rýže, listový salát" }
     ]
   },
   {
-    day: "Úterý", date: "8.4.2026", isToday: false,
-    soup: "Krkonošská zelňačka",
+    day: "Úterý", date: "6.10.2026", isToday: false,
+    soup: "Zelňačka",
     meals: [
-      { number: "1", name: "Holandský řízek, bramborová kaše, okurkový salát" },
-      { number: "2", name: "Zeleninový salát s caesar dresinkem a kuřecím masem, corn bageta" }
+      { number: "1", name: "Vídeňská roštěná, fazolové lusky se slaninou, opečený pařížský brambor" },
+      { number: "2", name: "Štýrská klobása, hrachová kaše, kyselá okurka, čerstvé pečivo" }
     ]
   },
   {
-    day: "Středa", date: "9.4.2026", isToday: false,
-    soup: "Gulášová",
+    day: "Středa", date: "7.10.2026", isToday: false,
+    soup: "Kulajda",
     meals: [
-      { number: "1", name: "Plněný paprikový lusk, rajská omáčka, houskový knedlík" },
-      { number: "2", name: "Tajemství trhanovského zámku, domácí bramborové plátky, tatarka" }
+      { number: "1", name: "Staročeská sekaná, bramborová kaše, ovocný kompot" },
+      { number: "2", name: "Zeleninový salát s panenkou sous vide, bylinkový dip, česneková tyčka" }
     ]
   },
   {
-    day: "Čtvrtek", date: "10.4.2026", isToday: false,
-    soup: "Pórková s vajíčkem",
+    day: "Čtvrtek", date: "8.10.2026", isToday: false,
+    soup: "Hrachová",
     meals: [
-      { number: "1", name: "Pečené králičí stehno, špenát, špekový bramborový knedlík" },
-      { number: "2", name: "Vepřový řízek Ondráš, vařený brambor, coleslaw salát" }
+      { number: "1", name: "Pečené vepřové kostky, špenát, cibulovo-bramborové šišky" },
+      { number: "2", name: "Smažený losos s medem a hořčicí, vařený brambor, limetkový dip" }
     ]
   },
   {
-    day: "Pátek", date: "11.4.2026", isToday: false,
-    soup: "Zeleninový vývar se šunkovými knedlíčky",
+    day: "Pátek", date: "9.10.2026", isToday: false,
+    soup: "Česnečka se sýrem a krutóny",
     meals: [
-      { number: "1", name: "Pečená kuřecí roláda, vařený pařížský brambor s bylinkami, dijonský dip" },
-      { number: "2", name: "Rizoto z vepřového masa se zeleninou, strouhaný sýr, beraní rohy" }
+      { number: "1", name: "Řízkové duo, bramborový salát" },
+      { number: "2", name: "Azzu, rýže" }
     ]
   }
 ];
