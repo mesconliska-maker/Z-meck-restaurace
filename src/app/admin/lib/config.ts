@@ -26,4 +26,4 @@ export const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
  *  - true:  web ukazuje zveřejněné menu z administrace; když pro aktuální týden
  *           žádné není (nebo DB neodpovídá), automaticky menicka.cz jako dřív
  */
-export const PUBLIC_SITE_CONNECTED = false;
+export const PUBLIC_SITE_CONNECTED = true;
