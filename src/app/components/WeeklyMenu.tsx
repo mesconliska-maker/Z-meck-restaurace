@@ -20,41 +20,43 @@ const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tq
 
 const fallbackMenu: DayMenu[] = [
   {
-    day: "Pondělí", date: "6.4.2026", isToday: false,
-    note: "Svátek, otevřeno",
-    soup: "",
-    meals: []
-  },
-  {
-    day: "Úterý", date: "7.4.2026", isToday: false,
-    soup: "Česnečka se sýrem a krutóny",
+    day: "Pondělí", date: "5.10.2026", isToday: false,
+    soup: "Kuřecí vývar se zeleninou a strouháním",
     meals: [
-      { number: "1", name: "Domácí sekaná, bramborová kaše, okurkový salát" },
-      { number: "2", name: "Zeleninový salát s kuřecími nugetkami v popcornu, koktejlový dip, bagetka" }
+      { number: "1", name: "Plněný brambor s kuřecím masem a pikantní sýrovou omáčkou, strouhaný sýr" },
+      { number: "2", name: "Vepřové medailonky po argentisku, rýže, listový salát" }
     ]
   },
   {
-    day: "Středa", date: "8.4.2026", isToday: false,
+    day: "Úterý", date: "6.10.2026", isToday: false,
     soup: "Zelňačka",
     meals: [
-      { number: "1", name: "Plněný vepřový řízek cordon bleu, vařený brambor, tatarka" },
-      { number: "2", name: "Lasagne s kuřecím masem a jemnou tomatovou omáčkou, zapečené mozzarellou" }
+      { number: "1", name: "Vídeňská roštěná, fazolové lusky se slaninou, opečený pařížský brambor" },
+      { number: "2", name: "Štýrská klobása, hrachová kaše, kyselá okurka, čerstvé pečivo" }
     ]
   },
   {
-    day: "Čtvrtek", date: "9.4.2026", isToday: false,
-    soup: "Hrachová se slaninovým chipsem",
+    day: "Středa", date: "7.10.2026", isToday: false,
+    soup: "Kulajda",
     meals: [
-      { number: "1", name: "Dušená mrkev, vepřové kostky, domácí rozpek" },
-      { number: "2", name: "Pečené masové koule, rajská omáčka, kolínka nebo houskový knedlík" }
+      { number: "1", name: "Staročeská sekaná, bramborová kaše, ovocný kompot" },
+      { number: "2", name: "Zeleninový salát s panenkou souse vide, bylinkový dip, česneková tyčka" }
     ]
   },
   {
-    day: "Pátek", date: "10.4.2026", isToday: false,
-    soup: "Bramboračka",
+    day: "Čtvrtek", date: "8.10.2026", isToday: false,
+    soup: "Hrachová",
     meals: [
-      { number: "1", name: "Smažený hermelín se šunkou, vařený brambor, tatarka" },
-      { number: "2", name: "Domácí pražská kuřecí roláda, šťouchaný bylinkový brambor" }
+      { number: "1", name: "Pečené vepřové kostky, špenát, cibulovo-bramborové šišky" },
+      { number: "2", name: "Smažený losos s medem a hořčicí, vařený brambor, limetkový dip" }
+    ]
+  },
+  {
+    day: "Pátek", date: "9.10.2026", isToday: false,
+    soup: "Česnečka se sýrem a krutóny",
+    meals: [
+      { number: "1", name: "Řízkové duo, bramborový salát" },
+      { number: "2", name: "Azzu, rýže" }
     ]
   }
 ];
