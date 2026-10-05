@@ -1,5 +1,4 @@
-import { Calendar, UtensilsCrossed, Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Calendar, UtensilsCrossed } from "lucide-react";
 
 interface Meal {
   number: string;
@@ -14,9 +13,6 @@ interface DayMenu {
   meals: Meal[];
   note?: string;
 }
-
-const SHEET_ID = "1OJp1WUjXfYEXAOIh4AM08gBg4JumJS0Yd8DDlXi1API";
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
 const fallbackMenu: DayMenu[] = [
   {
@@ -66,55 +62,9 @@ function getTodayDay(): string {
   return days[new Date().getDay()];
 }
 
-function formatDate(value: any): string {
-  if (!value) return "";
-  // Google Sheets vrací datum jako "Date(2026,3,3)" — měsíc je 0-indexed
-  if (typeof value === "string" && value.startsWith("Date(")) {
-    const parts = value.replace("Date(", "").replace(")", "").split(",");
-    const year = parseInt(parts[0]);
-    const month = parseInt(parts[1]) + 1; // +1 protože je 0-indexed
-    const day = parseInt(parts[2]);
-    return `${day}.${month}.${year}`;
-  }
-  return String(value);
-}
-
 export function WeeklyMenu() {
-  const [menu, setMenu] = useState<DayMenu[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const today = getTodayDay();
-
-    fetch(SHEET_URL)
-      .then((res) => res.text())
-      .then((text) => {
-        const json = JSON.parse(
-          text.replace("/*O_o*/\ngoogle.visualization.Query.setResponse(", "").replace(");", "")
-        );
-        const rows = json.table.rows;
-
-        const parsed: DayMenu[] = rows
-          .filter((row: any) => row.c[0]?.v)
-          .map((row: any) => ({
-            day: row.c[0]?.v || "",
-            date: formatDate(row.c[1]?.v),
-            isToday: (row.c[0]?.v || "") === today,
-            soup: row.c[2]?.v || "",
-            meals: [
-              { number: "1", name: row.c[3]?.v || "" },
-              { number: "2", name: row.c[4]?.v || "" },
-            ],
-          }));
-
-        setMenu(parsed.length > 0 ? parsed : fallbackMenu.map(d => ({ ...d, isToday: d.day === today })));
-      })
-      .catch(() => {
-        const today = getTodayDay();
-        setMenu(fallbackMenu.map(d => ({ ...d, isToday: d.day === today })));
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const today = getTodayDay();
+  const menu = fallbackMenu.map(d => ({ ...d, isToday: d.day === today }));
 
   return (
     <section className="py-20 bg-gradient-to-b from-white to-gray-50">
@@ -136,14 +86,7 @@ export function WeeklyMenu() {
           </p>
         </div>
 
-        {loading && (
-          <div className="flex justify-center py-20">
-            <Loader2 className="animate-spin text-orange-600" size={40} />
-          </div>
-        )}
-
-        {!loading && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {menu.map((day, index) => (
               <div
                 key={index}
@@ -201,7 +144,6 @@ export function WeeklyMenu() {
               </div>
             ))}
           </div>
-        )}
 
         <div className="mt-8 text-center">
           <p className="text-gray-600">
