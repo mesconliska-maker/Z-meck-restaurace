@@ -1,4 +1,4 @@
-import { AlertTriangle, ChevronLeft, ChevronRight, DownloadCloud, Eye, EyeOff, FileText, Globe, Loader2, Save } from "lucide-react";
+import { AlertTriangle, ChevronLeft, ChevronRight, DownloadCloud, Eye, EyeOff, Facebook, FileText, Globe, Loader2, Save } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { PUBLIC_SITE_CONNECTED } from "../lib/config";
@@ -8,6 +8,7 @@ import { getMenuStore } from "../lib/store";
 import type { DayEntry, WeekMenu, WeekSummary } from "../lib/types";
 import { activeWeekStart, addDays, formatShort, formatWeekRange, pragueDate, weekdayIndex } from "../lib/week";
 import { DayCard } from "./DayCard";
+import { FacebookPanel } from "./FacebookPanel";
 import { PdfPanel } from "./PdfPanel";
 import { WebPreview } from "./WebPreview";
 
@@ -39,7 +40,7 @@ export function WeekEditor() {
   const [saving, setSaving] = useState(false);
   const [importing, setImporting] = useState(false);
   const [summaries, setSummaries] = useState<WeekSummary[]>([]);
-  const [previewTab, setPreviewTab] = useState<"pdf" | "web">("pdf");
+  const [previewTab, setPreviewTab] = useState<"pdf" | "web" | "facebook">("pdf");
 
   const dirty = snapshot(week) !== saved;
   const warnings = useMemo(() => weekWarnings(week), [week]);
@@ -290,6 +291,7 @@ export function WeekEditor() {
                 [
                   { id: "pdf", label: "PDF k tisku", icon: FileText },
                   { id: "web", label: "Náhled na webu", icon: Globe },
+                  { id: "facebook", label: "Facebook", icon: Facebook },
                 ] as const
               ).map((t) => (
                 <button
@@ -305,7 +307,13 @@ export function WeekEditor() {
               ))}
             </div>
             <div className="min-h-0 flex-1 overflow-auto">
-              {previewTab === "pdf" ? <PdfPanel week={week} /> : <WebPreview week={week} today={today} />}
+              {previewTab === "pdf" ? (
+                <PdfPanel week={week} />
+              ) : previewTab === "web" ? (
+                <WebPreview week={week} today={today} />
+              ) : (
+                <FacebookPanel week={week} dirty={dirty} />
+              )}
             </div>
           </div>
         </aside>

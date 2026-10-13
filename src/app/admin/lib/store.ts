@@ -22,6 +22,8 @@ export interface MenuStore {
   loadWeek(weekStart: string): Promise<WeekMenu | null>;
   saveWeek(week: WeekMenu): Promise<WeekMenu>;
   listWeeks(from: string, to: string): Promise<WeekSummary[]>;
+  /** Zavolá serverovou funkci (Supabase Edge Function) jako přihlášený editor. */
+  invoke<T>(name: string, body: FormData | Record<string, unknown>): Promise<T>;
 }
 
 // --- Supabase ---------------------------------------------------------------
@@ -136,6 +138,26 @@ class SupabaseStore implements MenuStore {
       updatedAt: r.updated_at as string,
     }));
   }
+
+  async invoke<T>(name: string, body: FormData | Record<string, unknown>) {
+    const { data, error } = await this.sb.functions.invoke(name, { body });
+    if (error) {
+      // Funkce vrací {error: "..."} s česky formulovanou příčinou – ta je
+      // užitečnější než obecné "Edge Function returned a non-2xx status code".
+      let message = error.message;
+      const response = (error as { context?: Response }).context;
+      if (response && typeof response.json === "function") {
+        try {
+          const json = await response.json();
+          if (json?.error) message = json.error;
+        } catch {
+          // odpověď nebyla JSON – zůstane obecná zpráva
+        }
+      }
+      throw new Error(message);
+    }
+    return data as T;
+  }
 }
 
 // --- Demo (localStorage) ----------------------------------------------------
@@ -191,6 +213,10 @@ class DemoStore implements MenuStore {
     return Object.values(this.readAll())
       .filter((w) => w.weekStart >= from && w.weekStart <= to)
       .map((w) => ({ weekStart: w.weekStart, published: w.published, updatedAt: w.updatedAt }));
+  }
+
+  async invoke<T>(): Promise<T> {
+    throw new Error("V demo režimu není napojení na server dostupné.");
   }
 }
 
