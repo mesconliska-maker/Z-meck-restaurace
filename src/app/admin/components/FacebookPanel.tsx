@@ -1,44 +1,86 @@
-import { AlertTriangle, CalendarClock, CheckCircle2, Copy, Download, ExternalLink, Loader2, RefreshCw, Send } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { AlertTriangle, CalendarClock, CheckCircle2, Clock, Copy, Download, ExternalLink, Loader2, RefreshCw, Send } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { buildCaption } from "../facebook/caption";
 import { imageFileName } from "../facebook/fileName";
+import { FACEBOOK_FUNCTION, formatPostTime, type FacebookConnection, type WeekShareState } from "../facebook/status";
 import { cleanWeek, weekWarnings } from "../lib/menu";
 import { getMenuStore } from "../lib/store";
 import type { WeekMenu } from "../lib/types";
-
-const FUNCTION = "facebook-share";
-
-type Connection =
-  | { state: "checking" }
-  | { state: "ok"; pageName: string; pageLink: string }
-  | { state: "error"; message: string };
+import { formatWeekRange } from "../lib/week";
+import { SchedulePicker, defaultScheduleDate, formatSchedule, isSchedulable } from "./SchedulePicker";
 
 interface PublishResult {
   url: string;
   scheduledAt: number | null;
 }
 
-/** Pondělí daného týdne v 7:00 (místní čas) ve formátu pro <input type="datetime-local">. */
-function defaultScheduleValue(weekStart: string): string {
-  const monday = new Date(`${weekStart}T07:00`);
-  const soon = new Date(Date.now() + 15 * 60 * 1000);
-  const d = monday > soon ? monday : soon;
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+/** Výrazné upozornění, jestli menu tohoto týdne už na Facebooku je. */
+export function ShareBanner({ share, weekStart }: { share: WeekShareState; weekStart: string }) {
+  const range = formatWeekRange(weekStart);
+  if (share.kind === "unknown") return null;
+  if (share.kind === "none") {
+    return (
+      <div className="flex items-start gap-2.5 rounded-xl border border-amber-300 bg-amber-50 px-3.5 py-3 text-sm text-amber-950">
+        <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-600" />
+        <div>
+          <p className="font-semibold">Menu na {range} zatím na Facebooku není</p>
+          <p className="text-amber-900/80">Nebylo zveřejněné ani naplánované.</p>
+        </div>
+      </div>
+    );
+  }
+  const scheduled = share.kind === "scheduled";
+  return (
+    <div
+      className={`flex items-start gap-2.5 rounded-xl border px-3.5 py-3 text-sm ${
+        scheduled ? "border-sky-300 bg-sky-50 text-sky-950" : "border-emerald-300 bg-emerald-50 text-emerald-950"
+      }`}
+    >
+      {scheduled ? (
+        <Clock size={18} className="mt-0.5 shrink-0 text-sky-600" />
+      ) : (
+        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-emerald-600" />
+      )}
+      <div className="min-w-0">
+        <p className="font-semibold">
+          {scheduled ? `Menu na ${range} je naplánované` : `Menu na ${range} už je na Facebooku`}
+        </p>
+        <p className="opacity-80">
+          {scheduled ? "Vyjde " : "Zveřejněno "}
+          {formatPostTime(share.post)} ·{" "}
+          <a href={share.post.url} target="_blank" rel="noopener" className="underline">
+            {scheduled ? "spravovat v Business Suite" : "otevřít příspěvek"}
+          </a>
+        </p>
+      </div>
+    </div>
+  );
 }
 
 /** Obrázek + text menu pro Facebook a sdílení na stránku restaurace. */
-export function FacebookPanel({ week, dirty }: { week: WeekMenu; dirty: boolean }) {
+export function FacebookPanel({
+  week,
+  dirty,
+  connection,
+  share,
+  onShared,
+}: {
+  week: WeekMenu;
+  dirty: boolean;
+  connection: FacebookConnection;
+  share: WeekShareState;
+  /** Po sdílení – načte znovu stav z Facebooku. */
+  onShared: () => void;
+}) {
   const store = getMenuStore();
   const [image, setImage] = useState<{ blob: Blob; url: string } | null>(null);
   const [rendering, setRendering] = useState(true);
   const [renderError, setRenderError] = useState<string | null>(null);
   const [caption, setCaption] = useState(() => buildCaption(cleanWeek(week)));
   const [captionEdited, setCaptionEdited] = useState(false);
-  const [connection, setConnection] = useState<Connection>({ state: "checking" });
   const [schedule, setSchedule] = useState(false);
-  const [scheduleValue, setScheduleValue] = useState(() => defaultScheduleValue(week.weekStart));
+  const [scheduleValue, setScheduleValue] = useState(() => defaultScheduleDate(week.weekStart));
   const [publishing, setPublishing] = useState(false);
   const [lastResult, setLastResult] = useState<PublishResult | null>(null);
   const urlRef = useRef<string | null>(null);
@@ -82,27 +124,9 @@ export function FacebookPanel({ week, dirty }: { week: WeekMenu; dirty: boolean 
   }, [week, captionEdited]);
 
   useEffect(() => {
-    setScheduleValue(defaultScheduleValue(week.weekStart));
+    setScheduleValue(defaultScheduleDate(week.weekStart));
     setLastResult(null);
   }, [week.weekStart]);
-
-  const checkConnection = useCallback(async () => {
-    if (store.mode !== "supabase") {
-      setConnection({ state: "error", message: "V demo režimu není sdílení dostupné." });
-      return;
-    }
-    setConnection({ state: "checking" });
-    try {
-      const r = await store.invoke<{ pageName: string; pageLink: string }>(FUNCTION, { action: "status" });
-      setConnection({ state: "ok", pageName: r.pageName, pageLink: r.pageLink });
-    } catch (e) {
-      setConnection({ state: "error", message: e instanceof Error ? e.message : String(e) });
-    }
-  }, [store]);
-
-  useEffect(() => {
-    checkConnection();
-  }, [checkConnection]);
 
   async function copyCaption() {
     try {
@@ -117,17 +141,20 @@ export function FacebookPanel({ week, dirty }: { week: WeekMenu; dirty: boolean 
     if (!image || connection.state !== "ok") return;
     let scheduledAt: number | null = null;
     if (schedule) {
-      const when = new Date(scheduleValue);
-      if (Number.isNaN(when.getTime())) {
-        toast.error("Zadejte datum a čas naplánování.");
+      if (!isSchedulable(scheduleValue)) {
+        toast.error("Naplánovat jde nejdřív za 10 minut a nejpozději za 29 dní.");
         return;
       }
-      scheduledAt = Math.floor(when.getTime() / 1000);
+      scheduledAt = Math.floor(scheduleValue.getTime() / 1000);
     }
-    const whenText = scheduledAt
-      ? `naplánovat na ${new Date(scheduledAt * 1000).toLocaleString("cs-CZ", { weekday: "long", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" })}`
-      : "zveřejnit hned";
-    if (!window.confirm(`Opravdu ${whenText} příspěvek s menu na stránce „${connection.pageName}“?`)) return;
+    const whenText = scheduledAt ? `naplánovat na ${formatSchedule(scheduleValue)}` : "zveřejnit hned";
+    const already =
+      share.kind === "published"
+        ? `POZOR: menu na tento týden už na Facebooku je (${formatPostTime(share.post)}).\n\n`
+        : share.kind === "scheduled"
+          ? `POZOR: menu na tento týden už je naplánované (${formatPostTime(share.post)}).\n\n`
+          : "";
+    if (!window.confirm(`${already}Opravdu ${whenText} příspěvek s menu na stránce „${connection.pageName}“?`)) return;
 
     setPublishing(true);
     try {
@@ -136,8 +163,9 @@ export function FacebookPanel({ week, dirty }: { week: WeekMenu; dirty: boolean 
       form.append("image", new File([image.blob], "poledni-menu.jpg", { type: "image/jpeg" }));
       form.append("message", caption);
       if (scheduledAt) form.append("scheduledAt", String(scheduledAt));
-      const r = await store.invoke<PublishResult>(FUNCTION, form);
+      const r = await store.invoke<PublishResult>(FACEBOOK_FUNCTION, form);
       setLastResult(r);
+      onShared();
       toast.success(r.scheduledAt ? "Příspěvek je naplánovaný." : "Příspěvek je na Facebooku.");
     } catch (e) {
       toast.error(`Sdílení se nepovedlo: ${e instanceof Error ? e.message : e}`);
@@ -150,6 +178,8 @@ export function FacebookPanel({ week, dirty }: { week: WeekMenu; dirty: boolean 
 
   return (
     <div className="space-y-4 pb-2">
+      <ShareBanner share={share} weekStart={week.weekStart} />
+
       {/* Obrázek */}
       <div className="relative mx-auto aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-lg border border-stone-200 bg-stone-100">
         {image && <img src={image.url} alt="Obrázek menu pro Facebook" className="h-full w-full object-contain" />}
@@ -243,7 +273,7 @@ export function FacebookPanel({ week, dirty }: { week: WeekMenu; dirty: boolean 
           {connection.state !== "checking" && (
             <button
               type="button"
-              onClick={checkConnection}
+              onClick={onShared}
               className="ml-auto shrink-0 text-xs text-stone-500 underline hover:text-stone-800"
             >
               Ověřit znovu
@@ -262,14 +292,7 @@ export function FacebookPanel({ week, dirty }: { week: WeekMenu; dirty: boolean 
           <input type="checkbox" checked={schedule} onChange={(e) => setSchedule(e.target.checked)} className="size-4 accent-orange-700" />
           Naplánovat na později
         </label>
-        {schedule && (
-          <input
-            type="datetime-local"
-            value={scheduleValue}
-            onChange={(e) => setScheduleValue(e.target.value)}
-            className="mb-3 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 focus:border-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-600/20"
-          />
-        )}
+        {schedule && <SchedulePicker value={scheduleValue} onChange={setScheduleValue} weekStart={week.weekStart} />}
 
         <button
           type="button"

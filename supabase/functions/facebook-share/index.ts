@@ -6,7 +6,9 @@
 // jako u ukládání menu.
 //
 // Akce:
-//   POST JSON {action: "status"}            → ověří token, vrátí název stránky
+//   POST JSON {action: "status", since?}    → ověří token, vrátí název stránky a příspěvky
+//        od `since` (unix sekundy) – zveřejněné i naplánované; administrace z nich
+//        pozná, jestli už menu daného týdne na Facebooku je
 //   POST multipart action=publish            → nahraje obrázek s textem jako příspěvek
 //        image (JPEG), message, scheduledAt? (unix sekundy – naplánovaný příspěvek)
 //
@@ -64,6 +66,46 @@ async function graph(path: string, init?: RequestInit) {
   return data;
 }
 
+interface PostInfo {
+  id: string;
+  message: string;
+  createdAt: string | null;
+  scheduledAt: number | null;
+  url: string;
+}
+
+/** Zveřejněné příspěvky od `since` + všechny naplánované. Chyba u naplánovaných nevadí. */
+async function recentPosts(pageId: string, auth: string, since: number): Promise<PostInfo[]> {
+  const published = await graph(
+    `${pageId}/published_posts?fields=id,message,created_time,permalink_url&since=${since}&limit=50&${auth}`,
+  );
+  const posts: PostInfo[] = (published.data ?? []).map((p: Record<string, string>) => ({
+    id: p.id,
+    message: p.message ?? "",
+    createdAt: p.created_time ?? null,
+    scheduledAt: null,
+    url: p.permalink_url ?? `https://www.facebook.com/${p.id}`,
+  }));
+  try {
+    const scheduled = await graph(
+      `${pageId}/scheduled_posts?fields=id,message,created_time,scheduled_publish_time&limit=50&${auth}`,
+    );
+    for (const p of scheduled.data ?? []) {
+      posts.push({
+        id: p.id,
+        message: p.message ?? "",
+        createdAt: p.created_time ?? null,
+        scheduledAt: Number(p.scheduled_publish_time) || null,
+        // naplánované nemají veřejný odkaz – spravují se v Meta Business Suite
+        url: "https://business.facebook.com/",
+      });
+    }
+  } catch (e) {
+    console.error("scheduled_posts", e instanceof Error ? e.message : e);
+  }
+  return posts;
+}
+
 async function isEditor(req: Request): Promise<boolean> {
   const authorization = req.headers.get("Authorization");
   if (!authorization) return false;
@@ -98,8 +140,15 @@ Deno.serve(async (req) => {
     if (!isMultipart) {
       const body = await req.json().catch(() => ({}));
       if (body?.action !== "status") return json({ error: "Neznámá akce." }, 400);
-      const page = await graph(`${pageId}?fields=name,link&access_token=${encodeURIComponent(token)}`);
-      return json({ ok: true, pageName: page.name, pageLink: page.link ?? `https://www.facebook.com/${pageId}` });
+      const auth = `access_token=${encodeURIComponent(token)}`;
+      const page = await graph(`${pageId}?fields=name,link&${auth}`);
+      const since = Number(body.since) || Math.floor(Date.now() / 1000) - 14 * 24 * 60 * 60;
+      return json({
+        ok: true,
+        pageName: page.name,
+        pageLink: page.link ?? `https://www.facebook.com/${pageId}`,
+        posts: await recentPosts(pageId, auth, since),
+      });
     }
 
     const form = await req.formData();

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { PUBLIC_SITE_CONNECTED } from "../lib/config";
 import { cleanWeek, emptyWeek, weekWarnings } from "../lib/menu";
+import { formatPostTime, useFacebookStatus } from "../facebook/status";
 import { fetchMenickaDays } from "../lib/menickaImport";
 import { getMenuStore } from "../lib/store";
 import type { DayEntry, WeekMenu, WeekSummary } from "../lib/types";
@@ -42,6 +43,7 @@ export function WeekEditor() {
   const [summaries, setSummaries] = useState<WeekSummary[]>([]);
   const [previewTab, setPreviewTab] = useState<"pdf" | "web" | "facebook">("pdf");
 
+  const facebook = useFacebookStatus(weekStart);
   const dirty = snapshot(week) !== saved;
   const warnings = useMemo(() => weekWarnings(week), [week]);
 
@@ -203,6 +205,27 @@ export function WeekEditor() {
           </button>
         </div>
         <span className={`rounded-full px-3 py-1 text-xs font-medium ${status.tone}`}>{status.text}</span>
+        {facebook.connection.state === "ok" && facebook.share.kind !== "unknown" && (
+          <button
+            type="button"
+            onClick={() => setPreviewTab("facebook")}
+            title="Otevřít záložku Facebook"
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
+              facebook.share.kind === "none"
+                ? "bg-amber-100 text-amber-900 ring-1 ring-amber-300"
+                : facebook.share.kind === "scheduled"
+                  ? "bg-sky-100 text-sky-900"
+                  : "bg-emerald-100 text-emerald-800"
+            }`}
+          >
+            <Facebook size={13} />
+            {facebook.share.kind === "none"
+              ? "Na Facebooku zatím není"
+              : facebook.share.kind === "scheduled"
+                ? `Facebook: naplánováno ${formatPostTime(facebook.share.post)}`
+                : `Facebook: zveřejněno ${formatPostTime(facebook.share.post)}`}
+          </button>
+        )}
         {loading && <Loader2 size={18} className="animate-spin text-stone-400" />}
 
         <div className="flex w-full flex-wrap gap-1.5 lg:ml-auto lg:w-auto">
@@ -312,7 +335,13 @@ export function WeekEditor() {
               ) : previewTab === "web" ? (
                 <WebPreview week={week} today={today} />
               ) : (
-                <FacebookPanel week={week} dirty={dirty} />
+                <FacebookPanel
+                  week={week}
+                  dirty={dirty}
+                  connection={facebook.connection}
+                  share={facebook.share}
+                  onShared={facebook.refresh}
+                />
               )}
             </div>
           </div>
