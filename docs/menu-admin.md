@@ -44,6 +44,47 @@ Pozn.: Free projekt Supabase se po 7 dnech **bez jakéhokoli provozu** uspí. Po
 napojení veřejného webu (dotaz při každé návštěvě) k tomu prakticky nedojde;
 do té doby stačí, že klient administraci používá každý týden.
 
+## Sdílení na Facebook
+
+V administraci záložka **Facebook**: obrázek menu 1080 × 1350 px (stejná sazba
+jako PDF, formát `social` 4:5 – Facebook ho ve feedu ukáže celý), text příspěvku
+s celým menu, tlačítka *Stáhnout obrázek*, *Kopírovat text* a *Sdílet na
+Facebook* (hned, nebo naplánovaně 10 min – 29 dní dopředu).
+
+| Část | Kde |
+| --- | --- |
+| Obrázek | v prohlížeči: react-pdf → pdf.js → JPEG (`src/app/admin/facebook/renderImage.ts`) |
+| Publikování | Supabase Edge Function `facebook-share` (`supabase/functions/facebook-share`) |
+| Kdo smí sdílet | jen editor menu – funkce volá `is_menu_editor()` s JWT přihlášeného uživatele |
+| Token stránky | jen v Supabase → Edge Functions → Secrets: `FB_PAGE_ID`, `FB_PAGE_TOKEN` |
+
+Meta aplikace **Zamecka menu** (App ID 1990221341656223) je ve vývojářském účtu
+Jirky Vágnera, režim *Development* (stačí, protože token patří uživateli s rolí
+v aplikaci). Jirkův Facebook účet má ke stránce Zámecká restaurace
+(ID 584935721544743, vlastník firemní portfolio klienta) částečný přístup *Obsah*.
+
+### Obnova tokenu (když administrace hlásí, že propojení přestalo platit)
+
+Token stránky nevyprší sám, jen při změně hesla k Facebooku nebo odebrání
+přístupu ke stránce. Obnova:
+
+1. developers.facebook.com → Tools → **Graph API Explorer**, Meta App *Zamecka menu*,
+   oprávnění `pages_show_list`, `pages_read_engagement`, `pages_manage_posts`,
+   `business_management` → **Generate Access Token** (vybrat stránku Zámecká restaurace).
+2. ⓘ u tokenu → **Open in Access Token Tool** → **Extend Access Token** → zkopírovat nový token.
+3. Graph API Explorer s prodlouženým tokenem: `me/accounts?fields=name,id,access_token`
+   → `access_token` u Zámecké restaurace (v Access Token Debuggeru: *Type Page, Expires Never*).
+4. Supabase → Edge Functions → Secrets → přepsat `FB_PAGE_TOKEN`.
+
+### Nasazení funkce
+
+```bash
+supabase functions deploy facebook-share --project-ref rrzhyynllgbtyorvrnbg --no-verify-jwt
+```
+
+`--no-verify-jwt`: projekt používá nové API klíče (`sb_publishable_…`), JWT
+proto ověřujeme ve funkci sami přes `is_menu_editor()`.
+
 ## Přepnutí veřejného webu (až po otestování)
 
 Kód je připravený, stačí v `src/app/admin/lib/config.ts` nastavit

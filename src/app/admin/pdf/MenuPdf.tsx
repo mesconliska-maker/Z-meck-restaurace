@@ -2,9 +2,11 @@
 //
 // Navrženo pro kancelářskou tiskárnu: bílý papír, žádné plné plochy ani tisk
 // do kraje, jediná doplňková barva je zlatá z loga (v černobílém tisku vyjde
-// jako střední šedá). Dva formáty ze stejné šablony:
-//   - "a4":   A4 na výšku – vývěska, nástěnka
-//   - "a5x2": A4 na šířku se dvěma kopiemi A5 vedle sebe – po rozstřižení na stoly
+// jako střední šedá). Tři formáty ze stejné šablony:
+//   - "a4":     A4 na výšku – vývěska, nástěnka
+//   - "a5x2":   A4 na šířku se dvěma kopiemi A5 vedle sebe – po rozstřižení na stoly
+//   - "social": 4:5 (540 × 675 pt) – podklad pro obrázek na Facebook, ten
+//               ho ve feedu ukáže celý (A4 by ořízl)
 //
 // Velikost písma se dopočítává podle množství textu (fitScale), takže krátký
 // týden vyplní stránku většími písmeny a plný týden se vejde na jednu stránku.
@@ -16,7 +18,7 @@ import { ALLERGENS, filledMeals, formatPrice, isNoteOnlyDay, usedAllergens } fro
 import type { DayEntry, MenuItem, WeekMenu } from "../lib/types";
 import { dayName, formatShort, formatWeekRangeLong } from "../lib/week";
 
-export type PdfFormat = "a4" | "a5x2";
+export type PdfFormat = "a4" | "a5x2" | "social";
 
 const INK = "#1c1917";
 const MUTED = "#6b645c";
@@ -273,6 +275,8 @@ function MenuSheet({ week, st, assetBase }: { week: WeekMenu; st: Styles; assetB
 // A4 = 595 × 842 pt
 const A4 = { pad: { top: 36, bottom: 30, x: 46 } };
 const A5_HALF = { pad: { top: 24, bottom: 20, x: 28 } };
+// 4:5 – při renderu do obrázku 2× = 1080 × 1350 px
+export const SOCIAL = { width: 540, height: 675, pad: { top: 30, bottom: 24, x: 36 } };
 
 const pageStyles = StyleSheet.create({
   a4: {
@@ -283,6 +287,10 @@ const pageStyles = StyleSheet.create({
   half: {
     width: "50%", paddingTop: A5_HALF.pad.top, paddingBottom: A5_HALF.pad.bottom,
     paddingHorizontal: A5_HALF.pad.x,
+  },
+  social: {
+    paddingTop: SOCIAL.pad.top, paddingBottom: SOCIAL.pad.bottom, paddingHorizontal: SOCIAL.pad.x,
+    backgroundColor: "#ffffff",
   },
   cut: {
     position: "absolute", top: 14, bottom: 14, left: "50%",
@@ -331,6 +339,22 @@ export function MenuPdfDocument({ week, format, assetBase = "", shrink = 1, onPa
             <MenuSheet week={week} st={st} assetBase={assetBase} />
           </View>
           <View style={pageStyles.cut} fixed />
+          <PageCounter onPageCount={onPageCount} />
+        </Page>
+      </Document>
+    );
+  }
+
+  if (format === "social") {
+    const box = {
+      width: SOCIAL.width - 2 * SOCIAL.pad.x,
+      height: SOCIAL.height - SOCIAL.pad.top - SOCIAL.pad.bottom,
+    };
+    const st = makeStyles(fitScale(week, box, 0.55, 1.2) * shrink);
+    return (
+      <Document title={title} author={RESTAURANT.name} language="cs">
+        <Page size={[SOCIAL.width, SOCIAL.height]} style={pageStyles.social}>
+          <MenuSheet week={week} st={st} assetBase={assetBase} />
           <PageCounter onPageCount={onPageCount} />
         </Page>
       </Document>
