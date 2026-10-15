@@ -10,7 +10,7 @@ const inputBase = `${field} w-full px-3 py-2 text-[15px]`;
 const smallInput = `${field} px-2.5 py-1.5 text-sm`;
 
 /** Víceřádkové pole, které roste s textem – dlouhé názvy jídel jsou vidět celé i na mobilu. */
-function AutoGrowText({
+export function AutoGrowText({
   value,
   onChange,
   ...rest
@@ -19,8 +19,21 @@ function AutoGrowText({
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight + 2}px`;
+    const fit = () => {
+      el.style.height = "auto";
+      el.style.height = `${el.scrollHeight + 2}px`;
+    };
+    fit();
+    // Při změně šířky (okno, rozvržení stránky) se počet řádků mění
+    let lastWidth = el.clientWidth;
+    const observer = new ResizeObserver(() => {
+      if (el.clientWidth !== lastWidth) {
+        lastWidth = el.clientWidth;
+        fit();
+      }
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
   }, [value]);
   return (
     <textarea

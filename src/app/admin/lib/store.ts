@@ -5,6 +5,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { SUPABASE_ANON_KEY, SUPABASE_URL, isSupabaseConfigured } from "./config";
 import { cleanWeek, normalizeWeek } from "./menu";
+import { cleanStandingMenu, normalizeStandingMenu, rowToStandingMenu, type StandingMenu } from "../../lib/standingMenu";
 import type { WeekMenu, WeekSummary } from "./types";
 
 export interface AdminUser {
@@ -22,6 +23,9 @@ export interface MenuStore {
   loadWeek(weekStart: string): Promise<WeekMenu | null>;
   saveWeek(week: WeekMenu): Promise<WeekMenu>;
   listWeeks(from: string, to: string): Promise<WeekSummary[]>;
+  /** Stálý jídelní lístek (/menu); null = v úložišti ještě není. */
+  loadStandingMenu(): Promise<StandingMenu | null>;
+  saveStandingMenu(menu: StandingMenu): Promise<StandingMenu>;
   /** Zavolá serverovou funkci (Supabase Edge Function) jako přihlášený editor. */
   invoke<T>(name: string, body: FormData | Record<string, unknown>): Promise<T>;
 }
@@ -139,6 +143,24 @@ class SupabaseStore implements MenuStore {
     }));
   }
 
+  async loadStandingMenu() {
+    const { data, error } = await this.sb.from("standing_menu").select("*").eq("id", 1).maybeSingle();
+    if (error) throw new Error(error.message);
+    return data ? rowToStandingMenu(data) : null;
+  }
+
+  async saveStandingMenu(menu: StandingMenu) {
+    const clean = cleanStandingMenu(menu);
+    const user = await this.getUser();
+    const { data, error } = await this.sb
+      .from("standing_menu")
+      .upsert({ id: 1, categories: clean.categories, notes: clean.notes, updated_by: user?.email ?? null })
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return rowToStandingMenu(data);
+  }
+
   async invoke<T>(name: string, body: FormData | Record<string, unknown>) {
     const { data, error } = await this.sb.functions.invoke(name, { body });
     if (error) {
@@ -163,6 +185,7 @@ class SupabaseStore implements MenuStore {
 // --- Demo (localStorage) ----------------------------------------------------
 
 const DEMO_KEY = "zamecka-menu-demo-v1";
+const DEMO_STANDING_KEY = "zamecka-standing-menu-demo-v1";
 const DEMO_USER: AdminUser = { email: "demo@zamecka-htyn.cz" };
 
 class DemoStore implements MenuStore {
@@ -213,6 +236,21 @@ class DemoStore implements MenuStore {
     return Object.values(this.readAll())
       .filter((w) => w.weekStart >= from && w.weekStart <= to)
       .map((w) => ({ weekStart: w.weekStart, published: w.published, updatedAt: w.updatedAt }));
+  }
+
+  async loadStandingMenu() {
+    try {
+      const raw = localStorage.getItem(DEMO_STANDING_KEY);
+      return raw ? normalizeStandingMenu(JSON.parse(raw)) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  async saveStandingMenu(menu: StandingMenu) {
+    const saved = { ...cleanStandingMenu(menu), updatedAt: new Date().toISOString(), updatedBy: DEMO_USER.email };
+    localStorage.setItem(DEMO_STANDING_KEY, JSON.stringify(saved));
+    return normalizeStandingMenu(saved);
   }
 
   async invoke<T>(): Promise<T> {

@@ -3,16 +3,18 @@
 // Samostatná stránka mimo layout webu (bez hlavičky a patičky), načítá se
 // líně (viz routes.ts), takže nezvětšuje veřejný web.
 
-import { Loader2, LogOut } from "lucide-react";
+import { BookOpen, CalendarDays, Loader2, LogOut } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
+import { NavLink, useLocation } from "react-router";
 import { Toaster } from "sonner";
+import { StandingMenuEditor } from "./components/StandingMenuEditor";
 import { WeekEditor } from "./components/WeekEditor";
 import { getMenuStore, type AdminUser } from "./lib/store";
 
 function useNoIndex() {
   useEffect(() => {
     const prevTitle = document.title;
-    document.title = "Administrace menu | Zámecká restaurace";
+    document.title = "Administrace | Zámecká restaurace";
     const meta = document.createElement("meta");
     meta.name = "robots";
     meta.content = "noindex, nofollow";
@@ -50,7 +52,7 @@ function LoginForm({ onDone }: { onDone: () => void }) {
       <form onSubmit={submit} className="w-full max-w-sm rounded-2xl border border-stone-200 bg-white p-8 shadow-sm">
         <img src="/menu-monogram.png" alt="" className="mx-auto mb-4 size-14" />
         <h1 className="text-center text-3xl font-semibold text-stone-900" style={{ fontFamily: "Cormorant Garamond, serif" }}>
-          Polední menu
+          Administrace
         </h1>
         <p className="mb-6 text-center text-sm text-stone-500">Administrace Zámecké restaurace</p>
         <label className="mb-1 block text-sm font-medium text-stone-700" htmlFor="email">E-mail</label>
@@ -89,8 +91,15 @@ function LoginForm({ onDone }: { onDone: () => void }) {
 
 type Gate = "loading" | "login" | "forbidden" | "ok";
 
+const SECTIONS = [
+  { to: "/admin", label: "Polední menu", icon: CalendarDays, end: true },
+  { to: "/admin/jidelni-listek", label: "Jídelní lístek", icon: BookOpen, end: false },
+] as const;
+
 export function AdminApp() {
   useNoIndex();
+  const { pathname } = useLocation();
+  const section = pathname.startsWith("/admin/jidelni-listek") ? "listek" : "poledni";
   const store = getMenuStore();
   const [gate, setGate] = useState<Gate>("loading");
   const [user, setUser] = useState<AdminUser | null>(null);
@@ -134,10 +143,29 @@ export function AdminApp() {
           <img src="/menu-monogram.png" alt="" className="size-9" />
           <div className="min-w-0">
             <p className="text-xl font-semibold leading-tight" style={{ fontFamily: "Cormorant Garamond, serif" }}>
-              Polední menu
+              Zámecká restaurace
             </p>
-            <p className="truncate text-xs text-stone-500">Zámecká restaurace · administrace</p>
+            <p className="truncate text-xs text-stone-500">administrace</p>
           </div>
+          {gate === "ok" && (
+            <nav className="ml-2 flex gap-1 sm:ml-6" aria-label="Sekce administrace">
+              {SECTIONS.map((s) => (
+                <NavLink
+                  key={s.to}
+                  to={s.to}
+                  end={s.end}
+                  className={({ isActive }) =>
+                    `inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium ${
+                      isActive ? "bg-orange-50 text-orange-800" : "text-stone-600 hover:bg-stone-100"
+                    }`
+                  }
+                >
+                  <s.icon size={16} />
+                  <span className="hidden sm:inline">{s.label}</span>
+                </NavLink>
+              ))}
+            </nav>
+          )}
           <div className="ml-auto flex items-center gap-3">
             <span className="hidden text-sm text-stone-500 sm:inline">{user?.email}</span>
             {store.mode === "supabase" && (
@@ -166,6 +194,8 @@ export function AdminApp() {
             Jste přihlášeni jako {user?.email}. Požádejte správce webu o přidání mezi editory.
           </p>
         </div>
+      ) : section === "listek" ? (
+        <StandingMenuEditor />
       ) : (
         <WeekEditor />
       )}
