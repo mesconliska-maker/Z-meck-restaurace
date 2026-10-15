@@ -115,6 +115,9 @@ create table if not exists public.standing_menu (
   updated_by  text
 );
 
+-- Německé řádky poznámky (pro PDF „Jen německy“), stejné pořadí jako notes
+alter table public.standing_menu add column if not exists notes_de jsonb not null default '[]'::jsonb;
+
 drop trigger if exists standing_menu_touch on public.standing_menu;
 create trigger standing_menu_touch
   before insert or update on public.standing_menu

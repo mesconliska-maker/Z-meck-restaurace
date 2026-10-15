@@ -27,6 +27,8 @@ export interface StandingMenu {
   categories: StandingMenuCategory[];
   /** Řádky poznámky pod lístkem (poloviční porce, alergeny, DPH…) */
   notes: string[];
+  /** Tytéž řádky německy (stejné pořadí) – pro PDF „Jen německy“ */
+  notesDe: string[];
   updatedAt?: string;
   updatedBy?: string;
 }
@@ -52,6 +54,10 @@ function normalizeItem(raw: unknown): StandingMenuItem {
   };
 }
 
+function strings(raw: unknown): string[] {
+  return Array.isArray(raw) ? raw.map((n) => (typeof n === "string" ? n : "")) : [];
+}
+
 /** Srovná data z úložiště do úplné podoby (chybějící pole, starší formát). */
 export function normalizeStandingMenu(raw: Partial<StandingMenu> | null | undefined): StandingMenu {
   const cats = Array.isArray(raw?.categories) ? raw.categories : [];
@@ -64,10 +70,24 @@ export function normalizeStandingMenu(raw: Partial<StandingMenu> | null | undefi
         items: Array.isArray(r.items) ? r.items.map(normalizeItem) : [],
       };
     }),
-    notes: Array.isArray(raw?.notes) ? raw.notes.filter((n): n is string => typeof n === "string") : [],
+    notes: strings(raw?.notes),
+    notesDe: strings(raw?.notesDe),
     updatedAt: raw?.updatedAt,
     updatedBy: raw?.updatedBy,
   };
+}
+
+function cleanNotes(cs: string[], de: string[]): { notes: string[]; notesDe: string[] } {
+  const notes: string[] = [];
+  const notesDe: string[] = [];
+  for (let i = 0; i < Math.max(cs.length, de.length); i++) {
+    const a = (cs[i] ?? "").trim();
+    const b = (de[i] ?? "").trim();
+    if (!a && !b) continue;
+    notes.push(a);
+    notesDe.push(b);
+  }
+  return { notes, notesDe };
 }
 
 /** Odstraní prázdné řádky a přebytečné mezery – volá se před uložením. */
@@ -83,15 +103,23 @@ export function cleanStandingMenu(menu: StandingMenu): StandingMenu {
           .filter((i) => i.name),
       }))
       .filter((c) => c.name || c.items.length),
-    notes: menu.notes.map((n) => n.trim()).filter(Boolean),
+    // české a německé řádky jsou páry – zahodí se jen řádek prázdný v obou jazycích
+    ...cleanNotes(menu.notes, menu.notesDe),
   };
 }
 
 /** Řádek tabulky standing_menu → StandingMenu */
-export function rowToStandingMenu(row: { categories: unknown; notes: unknown; updated_at?: string; updated_by?: string | null }): StandingMenu {
+export function rowToStandingMenu(row: {
+  categories: unknown;
+  notes: unknown;
+  notes_de?: unknown;
+  updated_at?: string;
+  updated_by?: string | null;
+}): StandingMenu {
   return normalizeStandingMenu({
     categories: row.categories as StandingMenuCategory[],
     notes: row.notes as string[],
+    notesDe: row.notes_de as string[],
     updatedAt: row.updated_at,
     updatedBy: row.updated_by ?? undefined,
   });
@@ -248,5 +276,10 @@ export const DEFAULT_STANDING_MENU: StandingMenu = {
     "Všechna poloviční hlavní jídla = polovina ceny + 30 Kč",
     "Veškeré alergeny jsou na požádání u obsluhy.",
     "Ceny jsou uvedeny včetně DPH. Změna cen vyhrazena.",
+  ],
+  notesDe: [
+    "Alle halben Hauptgerichte = halber Preis + 30 Kč",
+    "Informationen zu Allergenen erhalten Sie auf Anfrage beim Personal.",
+    "Alle Preise inkl. MwSt. Preisänderungen vorbehalten.",
   ],
 };

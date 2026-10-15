@@ -311,6 +311,13 @@ export function StandingMenuEditor() {
   }, [save, saving, dirty]);
 
   const setCategories = (categories: StandingMenuCategory[]) => setMenu((m) => ({ ...m, categories }));
+  const setNote = (key: "notes" | "notesDe", index: number, value: string) =>
+    setMenu((m) => {
+      const next = [...m[key]];
+      while (next.length <= index) next.push("");
+      next[index] = value;
+      return { ...m, [key]: next };
+    });
   const preview = useMemo(() => cleanStandingMenu(menu), [menu]);
 
   function discard() {
@@ -386,17 +393,38 @@ export function StandingMenuEditor() {
             <h3 className="mb-1 text-xl font-medium" style={{ fontFamily: "Cormorant Garamond, serif" }}>
               Poznámka pod lístkem
             </h3>
-            <p className="mb-3 text-sm text-stone-500">Každý řádek zvlášť – poslední se zobrazí menším písmem.</p>
-            <div className="space-y-2">
-              {menu.notes.map((note, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <input
-                    className={`${field} min-w-0 flex-1 px-3 py-2 text-[15px]`}
-                    value={note}
-                    aria-label={`Řádek poznámky ${i + 1}`}
-                    onChange={(e) => setMenu((m) => ({ ...m, notes: m.notes.map((n, j) => (j === i ? e.target.value : n)) }))}
-                  />
-                  <IconButton label="Odebrat řádek" danger onClick={() => setMenu((m) => ({ ...m, notes: m.notes.filter((_, j) => j !== i) }))}>
+            <p className="mb-3 text-sm text-stone-500">
+              Každý řádek zvlášť – poslední se zobrazí menším písmem. Německý překlad se použije v PDF „Jen německy“.
+            </p>
+            <div className="space-y-3">
+              {Array.from({ length: Math.max(menu.notes.length, menu.notesDe.length) }, (_, i) => (
+                <div key={i} className="flex gap-2">
+                  <div className="min-w-0 flex-1">
+                    <input
+                      className={`${field} w-full px-3 py-2 text-[15px]`}
+                      value={menu.notes[i] ?? ""}
+                      aria-label={`Řádek poznámky ${i + 1}`}
+                      onChange={(e) => setNote("notes", i, e.target.value)}
+                    />
+                    <input
+                      className={`${field} mt-1.5 w-full px-3 py-1.5 text-sm italic text-stone-600`}
+                      value={menu.notesDe[i] ?? ""}
+                      placeholder="Německy (nepovinné)"
+                      aria-label={`Řádek poznámky ${i + 1} německy`}
+                      onChange={(e) => setNote("notesDe", i, e.target.value)}
+                    />
+                  </div>
+                  <IconButton
+                    label="Odebrat řádek"
+                    danger
+                    onClick={() =>
+                      setMenu((m) => ({
+                        ...m,
+                        notes: m.notes.filter((_, j) => j !== i),
+                        notesDe: m.notesDe.filter((_, j) => j !== i),
+                      }))
+                    }
+                  >
                     <Trash2 size={15} />
                   </IconButton>
                 </div>
@@ -404,7 +432,13 @@ export function StandingMenuEditor() {
             </div>
             <button
               type="button"
-              onClick={() => setMenu((m) => ({ ...m, notes: [...m.notes, ""] }))}
+              onClick={() =>
+                setMenu((m) => {
+                  const n = Math.max(m.notes.length, m.notesDe.length);
+                  const pad = (a: string[]) => [...a, ...Array(n - a.length).fill("")];
+                  return { ...m, notes: [...pad(m.notes), ""], notesDe: [...pad(m.notesDe), ""] };
+                })
+              }
               className="mt-2 inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium text-orange-700 hover:bg-orange-50"
             >
               <Plus size={16} /> Přidat řádek

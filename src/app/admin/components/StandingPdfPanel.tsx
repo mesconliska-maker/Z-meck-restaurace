@@ -1,11 +1,18 @@
 import { Download, ExternalLink, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { StandingMenu } from "../../lib/standingMenu";
-import { standingPdfFileName } from "../pdf/StandingMenuPdf";
+import { standingPdfFileName, type ListekLang } from "../pdf/StandingMenuPdf";
+
+const LANGS: { id: ListekLang; label: string }[] = [
+  { id: "cs-de", label: "Česky + německy" },
+  { id: "cs", label: "Jen česky" },
+  { id: "de", label: "Jen německy" },
+];
 
 /** Náhled PDF jídelního lístku (A4, více stran), překresluje se při úpravách. */
 export function StandingPdfPanel({ menu }: { menu: StandingMenu }) {
-  const [german, setGerman] = useState(true);
+  const [lang, setLang] = useState<ListekLang>("cs-de");
+  const missingDe = menu.categories.reduce((n, c) => n + c.items.filter((i) => i.name.trim() && !i.nameDe.trim()).length, 0);
   const [url, setUrl] = useState<string | null>(null);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +25,7 @@ export function StandingPdfPanel({ menu }: { menu: StandingMenu }) {
       try {
         // react-pdf je velký – načte se až s otevřením této záložky
         const { renderStandingMenuPdf } = await import("../pdf/renderStandingPdf");
-        const blob = await renderStandingMenuPdf(menu, german);
+        const blob = await renderStandingMenuPdf(menu, lang);
         if (cancelled) return;
         const next = URL.createObjectURL(blob);
         if (urlRef.current) URL.revokeObjectURL(urlRef.current);
@@ -35,7 +42,7 @@ export function StandingPdfPanel({ menu }: { menu: StandingMenu }) {
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [menu, german]);
+  }, [menu, lang]);
 
   useEffect(() => () => {
     if (urlRef.current) URL.revokeObjectURL(urlRef.current);
@@ -45,18 +52,15 @@ export function StandingPdfPanel({ menu }: { menu: StandingMenu }) {
     <div className="flex h-full flex-col">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <div className="inline-flex rounded-lg border border-stone-200 bg-white p-0.5" role="radiogroup" aria-label="Jazyk">
-          {[
-            { id: true, label: "Česky + německy" },
-            { id: false, label: "Jen česky" },
-          ].map((o) => (
+          {LANGS.map((o) => (
             <button
-              key={String(o.id)}
+              key={o.id}
               type="button"
               role="radio"
-              aria-checked={german === o.id}
-              onClick={() => setGerman(o.id)}
+              aria-checked={lang === o.id}
+              onClick={() => setLang(o.id)}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                german === o.id ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
+                lang === o.id ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
               }`}
             >
               {o.label}
@@ -66,7 +70,7 @@ export function StandingPdfPanel({ menu }: { menu: StandingMenu }) {
         <div className="ml-auto flex gap-2">
           <a
             href={url ?? undefined}
-            download={standingPdfFileName(german)}
+            download={standingPdfFileName(lang)}
             aria-disabled={!url}
             className={`inline-flex items-center gap-1.5 rounded-lg bg-orange-700 px-3 py-2 text-sm font-medium text-white hover:bg-orange-800 ${
               url ? "" : "pointer-events-none opacity-50"
@@ -91,6 +95,12 @@ export function StandingPdfPanel({ menu }: { menu: StandingMenu }) {
       <p className="mb-2 text-xs text-stone-500">
         A4 na výšku, více stran. Kategorie se mezi stranami nedělí – když se nevejde, začne na další straně.
       </p>
+      {lang === "de" && missingDe > 0 && (
+        <p className="mb-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
+          {missingDe} {missingDe === 1 ? "jídlo nemá" : missingDe < 5 ? "jídla nemají" : "jídel nemá"} německý název – v PDF
+          zůstane česky.
+        </p>
+      )}
 
       <div className="relative min-h-[420px] flex-1 overflow-hidden rounded-xl border border-stone-200 bg-stone-100">
         {url && (
