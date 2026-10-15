@@ -10,6 +10,8 @@ import {
   ChevronDown,
   ExternalLink,
   Eye,
+  FileText,
+  Globe,
   Loader2,
   Plus,
   RotateCcw,
@@ -30,6 +32,7 @@ import {
 import { getMenuStore } from "../lib/store";
 import { useLeaveGuard } from "../lib/useLeaveGuard";
 import { AutoGrowText } from "./DayCard";
+import { StandingPdfPanel } from "./StandingPdfPanel";
 
 const field =
   "rounded-lg border border-stone-300 bg-white text-stone-900 placeholder:text-stone-400 focus:border-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-600/20";
@@ -256,6 +259,7 @@ export function StandingMenuEditor() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [existsInDb, setExistsInDb] = useState(false);
+  const [previewTab, setPreviewTab] = useState<"web" | "pdf">("web");
 
   const dirty = snapshot(menu) !== saved;
   const warnings = useMemo(() => warningsOf(menu), [menu]);
@@ -408,17 +412,39 @@ export function StandingMenuEditor() {
           </section>
         </div>
 
-        {/* Náhled stránky /menu */}
-        <aside className="hidden lg:sticky lg:top-[88px] lg:block lg:h-[calc(100vh-190px)]">
+        {/* Náhled stránky /menu a PDF k tisku */}
+        <aside className="lg:sticky lg:top-[88px] lg:h-[calc(100vh-190px)]">
           <div className="flex h-full flex-col rounded-xl border border-stone-200 bg-white p-3">
-            <p className="mb-3 flex items-center gap-1.5 border-b border-stone-100 px-1 pb-3 text-sm font-medium text-stone-700">
-              <Eye size={16} /> Náhled na webu
-            </p>
-            <div className="min-h-0 flex-1 overflow-auto rounded-lg bg-gray-50">
-              <div className="p-6" style={{ zoom: 0.62 }}>
-                <StandingMenuView menu={preview} />
-              </div>
+            <div className="mb-3 flex gap-1 border-b border-stone-100 pb-3">
+              {(
+                [
+                  { id: "web", label: "Náhled na webu", icon: Globe },
+                  { id: "pdf", label: "PDF k tisku", icon: FileText },
+                ] as const
+              ).map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setPreviewTab(t.id)}
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium ${
+                    previewTab === t.id ? "bg-orange-50 text-orange-800" : "text-stone-600 hover:bg-stone-100"
+                  }`}
+                >
+                  <t.icon size={16} /> {t.label}
+                </button>
+              ))}
             </div>
+            {previewTab === "web" ? (
+              <div className="min-h-[420px] flex-1 overflow-auto rounded-lg bg-gray-50 lg:min-h-0">
+                <div className="p-6" style={{ zoom: 0.62 }}>
+                  <StandingMenuView menu={preview} />
+                </div>
+              </div>
+            ) : (
+              <div className="min-h-0 flex-1">
+                <StandingPdfPanel menu={preview} />
+              </div>
+            )}
           </div>
         </aside>
       </div>

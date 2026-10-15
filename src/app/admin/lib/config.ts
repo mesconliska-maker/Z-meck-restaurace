@@ -13,10 +13,10 @@ const FALLBACK_SUPABASE_URL = "https://rrzhyynllgbtyorvrnbg.supabase.co";
 const FALLBACK_SUPABASE_ANON_KEY = "sb_publishable_N1U2uZ70sQLBqwLf5ui5NQ_I8xjidI2";
 
 export const SUPABASE_URL: string =
-  import.meta.env.VITE_SUPABASE_URL || FALLBACK_SUPABASE_URL;
+  import.meta.env?.VITE_SUPABASE_URL || FALLBACK_SUPABASE_URL;
 
 export const SUPABASE_ANON_KEY: string =
-  import.meta.env.VITE_SUPABASE_ANON_KEY || FALLBACK_SUPABASE_ANON_KEY;
+  import.meta.env?.VITE_SUPABASE_ANON_KEY || FALLBACK_SUPABASE_ANON_KEY;
 
 export const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
