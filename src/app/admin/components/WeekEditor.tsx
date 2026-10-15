@@ -6,6 +6,7 @@ import { cleanWeek, emptyWeek, weekWarnings } from "../lib/menu";
 import { formatPostTime, useFacebookStatus } from "../facebook/status";
 import { fetchMenickaDays } from "../lib/menickaImport";
 import { getMenuStore } from "../lib/store";
+import { useLeaveGuard } from "../lib/useLeaveGuard";
 import type { DayEntry, WeekMenu, WeekSummary } from "../lib/types";
 import { activeWeekStart, addDays, formatShort, formatWeekRange, pragueDate, weekdayIndex } from "../lib/week";
 import { DayCard } from "./DayCard";
@@ -75,15 +76,7 @@ export function WeekEditor() {
     };
   }, [store, weekStart]);
 
-  useEffect(() => {
-    if (!dirty) return;
-    const warn = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = "";
-    };
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [dirty]);
+  useLeaveGuard(dirty);
 
   const save = useCallback(
     async (published: boolean) => {

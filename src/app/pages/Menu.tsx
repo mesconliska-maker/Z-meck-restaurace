@@ -1,128 +1,23 @@
-import { UtensilsCrossed } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-
-const menuCategories = [
-  {
-    id: 1,
-    name: "Studené předkrmy / Kalte Vorspeisen",
-    items: [
-      { name: "100 g Tatarský biftek, 3 ks topinek", nameDe: "Tatar Beafsteak, 3 st geröstete Brotscheiben", price: "175 Kč" },
-      { name: "80 g Hovězí carpaccio, parmezán, capary, bylinková bagetka", nameDe: "Rindercarpaccio, Parmesan, Kapern und Baguette", price: "175 Kč" },
-      { name: "100 g Krevety v křupavé panádě, mangovo-limetkový dip, wakame salát, bagetka", nameDe: "Garnelen in knuspriger Panade, Mango-Limetten-Dip, Wakame-Salat, Baguette", price: "179 Kč" },
-      { name: "150 g Caprese s mozarellou Burrata, bagetka", nameDe: "Caprese mit Burrata-Mozzarella, Baguette", price: "169 Kč" }
-    ]
-  },
-  {
-    id: 2,
-    name: "Polévky / Suppen",
-    items: [
-      { name: "Dle denní nabídky", nameDe: "Nach Tagesangebot", price: "49 Kč" },
-      { name: "Tomatová, bylinková bageta", nameDe: "Tomatensuppe mit Baguette", price: "69 Kč" },
-      { name: "Hříbková, bylinková bageta", nameDe: "Steinpilzsuppe mit Baguette", price: "69 Kč" }
-    ]
-  },
-  {
-    id: 3,
-    name: "Speciality",
-    items: [
-      { name: "300 g Gril mix (rump steak, panenka, kuřecí prso), pečená zelenina, bramborový špíz, chedarová omáčka, BBQ dip", nameDe: "Grill-Mix (Rumpsteak, Schweinefilet, Hähnchenbrust), gebratenes Gemüse, Kartoffelspieß, Cheddarsoße, BBQ-Dip", price: "349 Kč" },
-      { name: "Burger s trhaným hovězím masem, slaninou a chedarovými uhlíky, batátové hranolky, BBQ smoked dip", nameDe: "Burger mit Pulled Beef, Bacon und Cheddar-Chips, Süßkartoffel-Pommes, BBQ-Smoked-Dip", price: "299 Kč" }
-    ]
-  },
-  {
-    id: 4,
-    name: "Saláty / Salate",
-    items: [
-      { name: "S krevetami v křupavé panádě, mangový dip, bagetka", nameDe: "Mit Garnelen in knuspriger Panade, Mango-Dip, Baguette", price: "269 Kč" },
-      { name: "S rozpečeným hermelínem, karamelizované ořechy, vinaigrette, bylinková bageta", nameDe: "Mit gerösteten Camembert, karamellisierten Nüssen, Vinaigrette, Baguette", price: "249 Kč" },
-      { name: "S kuřecím masem, slaninový chips, parmezán, caesar dresink a bylinková bageta", nameDe: "Mit Hühnerfleisch, Speckchips, Parmesan Käse, Caesar Dressing, Baguette", price: "249 Kč", popular: true }
-    ]
-  },
-  {
-    id: 5,
-    name: "Bezmasá jídla / Vegetarisches Essen",
-    items: [
-      { name: "150 g Smažený sýr, tatarka", nameDe: "Panierter Käse, Remoulade", price: "159 Kč" },
-      { name: "150 g Rozpečený hermelín s pečenou zeleninou, bylinkový dip, bagetka", nameDe: "Überbackener Hermelin mit geröstetem Gemüse, Kräuterdip, Baguette", price: "189 Kč" },
-      { name: "200 g Smažený sýrový talíř (eidam, niva, balkánský sýr, hermelín), spousta čerstvé zeleniny, bylinkový dip, brusinky", nameDe: "Frittierter Käseteller (Edamer, Blauschimmelkäse, Balkan-Käse, Hermelinkäse), viel frisches Gemüse, Kräuterdip, Preiselbeeren", price: "229 Kč" }
-    ]
-  },
-  {
-    id: 6,
-    name: "Ryby / Fisch",
-    items: [
-      { name: "200 g Losos filet s mangovo-limetkovou omáčkou, wakame salátek, batátové hranolky", nameDe: "Lachsfilet mit Mango-Limetten-Soße, Wakame-Salat, Süßkartoffel-Pommes", price: "329 Kč" },
-      { name: "200 g Losos filet s bylinkovým máslem a spoustou čerstvé zeleniny, creme fraiche, tomatová salsa", nameDe: "Lachsfilet mit Kräuterbutter und viel frischem Gemüse, Crème fraîche, Tomatensalsa", price: "329 Kč" }
-    ]
-  },
-  {
-    id: 7,
-    name: "Drůbež / Geflügel",
-    items: [
-      { name: "200 g Kuřecí medailonky BBQ sweet chilli, restovaná zelenina, cibulové kroužky, creme fraiche", nameDe: "Hähnchenmedaillons mit BBQ-Sweet-Chili-Soße, gebratenem Gemüse, Zwiebelringen und Crème fraîche", price: "279 Kč" },
-      { name: "200 g Mini bramborové noky s kuřecím masem, cherry rajčátky a jemnou tomatovou omáčkou, parmezán", nameDe: "Mini-Kartoffelgnocchi mit Hähnchenfleisch, Kirschtomaten und einer milden Tomatensoße, Parmesan", price: "259 Kč" },
-      { name: "200 g Kuřecí steak s bylinkovým máslem, spousta čerstvé zeleniny, bylinkový dip a tomatová salsa", nameDe: "Hähnchensteak mit Kräuterbutter, reichlich frischem Gemüse, Kräuterdip und Tomatensalsa", price: "269 Kč" },
-      { name: "200 g Kachní prso s pikantní zeleninou, šťouchaný bylinkový brambor", nameDe: "Entenbrust mit pikantem Gemüse, gestampfte Kräuterkartoffeln", price: "299 Kč" },
-      { name: "200 g Smažený kuřecí řízek obalený v sezamu", nameDe: "Hühnerschnitzel in Sezam paniert", price: "189 Kč" }
-    ]
-  },
-  {
-    id: 8,
-    name: "Vepřové maso / Schwein",
-    items: [
-      { name: "200 g Vepřové medailonky s hříbkovou omáčkou", nameDe: "Schweinemedailons mit Steinpilzsauce", price: "259 Kč" },
-      { name: "200 g Marinovaný špalíček BBQ sweet chilli, pečená zelenina, cibulové kroužky, creme fraiche", nameDe: "Marinierter BBQ sweet chilli Schweinefilet, Grillgemüse, Zwiebelringe, Creme Fraiche", price: "299 Kč", popular: true },
-      { name: "200 g Smažený vepřový řízek", nameDe: "Schweineschnitzel paniert", price: "189 Kč" },
-      { name: "200 g Řízečky z panenky v panko strouhance, šťouchaný slaninový brambor, zelný salát s křenem", nameDe: "Schnitzel (Schweinefile), Speckkartoffeln mit Zwiebel, Krautsalat mit Meerrettich", price: "299 Kč" }
-    ]
-  },
-  {
-    id: 9,
-    name: "Hovězí maso / Rind",
-    items: [
-      { name: "200 g Hovězí steak na barevném pepři, hráškové lusky se slaninou a cibulové kroužky, creme fraiche", nameDe: "Rindersteak mit buntem Pfeffer, Zuckerschoten mit Speck und Zwiebelringen, Crème fraîche", price: "420 Kč", popular: true }
-    ]
-  },
-  {
-    id: 10,
-    name: "Dětské jídlo / Kinder Menü",
-    items: [
-      { name: "100 g Kuřecí řízek, hranolky, kečup", nameDe: "Hähnchenschnitzel, Pommes Frites, Ketschup", price: "179 Kč" }
-    ]
-  },
-  {
-    id: 11,
-    name: "Přílohy / Beilagen",
-    items: [
-      { name: "180 g Hranolky s chedarovým přelivem posypané drcenou cibulkou se slaninou", nameDe: "Pommes mit Chedar Sosse und Zwiebelspeck", price: "75 Kč" },
-      { name: "180 g Batátové hranolky", nameDe: "Süßkartoffel-Pommes", price: "75 Kč" },
-      { name: "180 g Hranolky, krokety", nameDe: "Pommes Frites, Kroketten", price: "50 Kč" },
-      { name: "150 g Opékaný pařížský brambor", nameDe: "Pariser Bratkartoffeln", price: "50 Kč" },
-      { name: "180 g Americký brambor", nameDe: "Amerikanische Kartoffeln", price: "50 Kč" },
-      { name: "180 g Bramboráčky", nameDe: "Kartoffelrösti", price: "50 Kč" },
-      { name: "180 g Šťouchaný slaninový brambor", nameDe: "Kartoffeln mit Speck", price: "50 Kč" },
-      { name: "180 g Vařený brambor", nameDe: "Gekochte Kartoffeln", price: "37 Kč" },
-      { name: "150 g Pečená zelenina", nameDe: "Gegrillte Gemüse", price: "69 Kč" },
-      { name: "200 g Míchaný salát", nameDe: "Gemischter Salat", price: "79 Kč" },
-      { name: "180 g Zelný salát", nameDe: "Kräutersalat", price: "47 Kč" },
-      { name: "80 g Kečup", nameDe: "Ketschup", price: "25 Kč" },
-      { name: "80 g Tatarská omáčka", nameDe: "Remoulade", price: "35 Kč" }
-    ]
-  },
-  {
-    id: 12,
-    name: "Dezerty / Nachspeisen",
-    items: [
-      { name: "Trhanec s vanilkovou omáčkou a malinovým rozvarem", nameDe: "Kaiserschmarn mit Vanillesauce und Himbeermus", price: "99 Kč" },
-      { name: "Čokoládové brownies s pistáciovým krémem a čerstvým ovocem", nameDe: "Schokoladen-Brownies mit Pistaziencreme und frischen Früchten", price: "99 Kč" },
-      { name: "Čokoládový fondant s vanilkovou zmrzlinou", nameDe: "Schokoladenfondant mit Vanille-Eiscreme", price: "105 Kč", popular: true },
-      { name: "Cheesecake s malinovou omáčkou", nameDe: "Cheesecake mit Himbeersauce", price: "99 Kč" },
-      { name: "Horké maliny", nameDe: "Heisse Himbeeren", price: "99 Kč" }
-    ]
-  }
-];
+import { StandingMenuView } from "../components/StandingMenuView";
+import { DEFAULT_STANDING_MENU, fetchStandingMenu, type StandingMenu } from "../lib/standingMenu";
 
 export function Menu() {
+  // Lístek z administrace; když databáze neodpoví, výchozí obsah z kódu
+  const [menu, setMenu] = useState<StandingMenu | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchStandingMenu().then((fromDb) => {
+      if (!cancelled) setMenu(fromDb ?? DEFAULT_STANDING_MENU);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -151,68 +46,13 @@ export function Menu() {
       {/* Menu Content */}
       <section className="py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          {menuCategories.map((category, index) => (
-            <div key={category.id} className={index !== 0 ? "mt-16" : ""}>
-              {/* Category Header */}
-              <div className="text-center mb-10">
-                <h2 
-                  className="text-4xl font-light text-gray-900 mb-3"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                >
-                  <span className="font-semibold">{category.name}</span>
-                </h2>
-                <div className="w-20 h-1 bg-gradient-to-r from-orange-600 to-orange-700 mx-auto"></div>
-              </div>
-
-              {/* Menu Items */}
-              <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
-                <div className="space-y-6">
-                  {category.items.map((item, itemIndex) => (
-                    <div 
-                      key={itemIndex}
-                      className="flex items-start justify-between gap-4 pb-6 border-b border-gray-100 last:border-0 last:pb-0 group hover:bg-orange-50/30 transition-colors px-4 py-2 rounded-lg -mx-4"
-                    >
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 flex-wrap">
-                          <h3 className="text-lg text-gray-900">
-                            {item.name}
-                          </h3>
-                          {item.popular && (
-                            <span className="px-2 py-1 bg-gradient-to-r from-orange-600 to-orange-700 text-white text-xs font-medium rounded">
-                              OBLÍBENÉ
-                            </span>
-                          )}
-                        </div>
-                        {item.nameDe && (
-                          <p className="text-sm text-gray-400 italic mt-0.5">{item.nameDe}</p>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="hidden sm:block h-px flex-1 border-b border-dotted border-gray-300 min-w-[20px]"></div>
-                        <span className="font-medium text-orange-700 whitespace-nowrap">
-                          {item.price}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          {menu ? (
+            <StandingMenuView menu={menu} />
+          ) : (
+            <div className="flex justify-center py-20">
+              <Loader2 className="animate-spin text-orange-600" size={40} />
             </div>
-          ))}
-
-          {/* Footer Note */}
-          <div className="mt-12 bg-orange-50 rounded-xl p-8 text-center border border-orange-100">
-            <UtensilsCrossed className="text-orange-700 mx-auto mb-4" size={40} />
-            <p className="text-gray-700 mb-2">
-              Všechna poloviční hlavní jídla = polovina ceny + 30 Kč
-            </p>
-            <p className="text-gray-700 mb-2">
-              Veškeré alergeny jsou na požádání u obsluhy.
-            </p>
-            <p className="text-sm text-gray-600">
-              Ceny jsou uvedeny včetně DPH. Změna cen vyhrazena.
-            </p>
-          </div>
+          )}
         </div>
       </section>
     </div>

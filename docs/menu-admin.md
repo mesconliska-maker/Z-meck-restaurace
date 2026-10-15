@@ -44,6 +44,22 @@ Pozn.: Free projekt Supabase se po 7 dnech **bez jakéhokoli provozu** uspí. Po
 napojení veřejného webu (dotaz při každé návštěvě) k tomu prakticky nedojde;
 do té doby stačí, že klient administraci používá každý týden.
 
+## Jídelní lístek (stránka /menu)
+
+Administrace → **Jídelní lístek** (`/admin/jidelni-listek`): kategorie, jídla
+(název, německý název, cena, štítek *Oblíbené*), pořadí a poznámka pod
+lístkem. Vpravo živý náhled stránky. *Uložit a zveřejnit* zapíše celý lístek
+najednou a stránka /menu ho ukáže hned.
+
+| Část | Kde |
+| --- | --- |
+| Data | Supabase, tabulka `standing_menu` (jediný řádek `id = 1`, kategorie a poznámky jako JSON) |
+| Práva | číst smí kdokoli, zapisovat jen editoři (`is_menu_editor()`) – `supabase/schema.sql` |
+| Veřejná stránka | `src/app/pages/Menu.tsx` → `fetchStandingMenu()`; když databáze neodpoví do 5 s, ukáže `DEFAULT_STANDING_MENU` z `src/app/lib/standingMenu.ts` |
+| Vzhled | `src/app/components/StandingMenuView.tsx` – sdílí ho web i náhled v administraci |
+
+Výchozí obsah (stav webu k 15. 10. 2026) je v `supabase/standing_menu_seed.sql`.
+
 ## Sdílení na Facebook
 
 V administraci záložka **Facebook**: obrázek menu 1080 × 1350 px (stejná sazba

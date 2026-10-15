@@ -101,3 +101,39 @@ grant select on public.current_week_menu to anon, authenticated;
 
 -- Editoři (e-maily malými písmeny). Upravte podle skutečných účtů:
 -- insert into public.menu_editors (email) values ('provozni@example.cz') on conflict do nothing;
+
+-- ---------------------------------------------------------------------------
+-- Stálý jídelní lístek (stránka /menu) – jeden řádek (id = 1), kategorie
+-- a jídla jako JSON. Číst smí kdokoli (veřejný web), měnit jen editoři menu.
+-- Výchozí obsah: supabase/standing_menu_seed.sql
+
+create table if not exists public.standing_menu (
+  id          smallint primary key default 1 check (id = 1),
+  categories  jsonb not null default '[]'::jsonb,
+  notes       jsonb not null default '[]'::jsonb,
+  updated_at  timestamptz not null default now(),
+  updated_by  text
+);
+
+drop trigger if exists standing_menu_touch on public.standing_menu;
+create trigger standing_menu_touch
+  before insert or update on public.standing_menu
+  for each row execute function public.touch_updated_at();
+
+alter table public.standing_menu enable row level security;
+
+drop policy if exists "public reads standing menu" on public.standing_menu;
+create policy "public reads standing menu" on public.standing_menu
+  for select to anon, authenticated
+  using (true);
+
+drop policy if exists "editors insert standing menu" on public.standing_menu;
+create policy "editors insert standing menu" on public.standing_menu
+  for insert to authenticated
+  with check ((select public.is_menu_editor()));
+
+drop policy if exists "editors update standing menu" on public.standing_menu;
+create policy "editors update standing menu" on public.standing_menu
+  for update to authenticated
+  using ((select public.is_menu_editor()))
+  with check ((select public.is_menu_editor()));

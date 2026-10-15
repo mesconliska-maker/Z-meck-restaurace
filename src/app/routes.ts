@@ -11,7 +11,7 @@ export const router = createBrowserRouter([
   // Administrace poledních menu – samostatná stránka bez layoutu webu,
   // načítá se až při otevření /admin (veřejný web tím nezvětšuje).
   {
-    path: "/admin",
+    path: "/admin/*",
     lazy: async () => ({ Component: (await import("./admin/AdminApp")).AdminApp }),
   },
   {
