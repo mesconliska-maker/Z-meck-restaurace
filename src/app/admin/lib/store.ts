@@ -154,7 +154,13 @@ class SupabaseStore implements MenuStore {
     const user = await this.getUser();
     const { data, error } = await this.sb
       .from("standing_menu")
-      .upsert({ id: 1, categories: clean.categories, notes: clean.notes, updated_by: user?.email ?? null })
+      .upsert({
+        id: 1,
+        categories: clean.categories,
+        notes: clean.notes,
+        notes_de: clean.notesDe,
+        updated_by: user?.email ?? null,
+      })
       .select("*")
       .single();
     if (error) throw new Error(error.message);

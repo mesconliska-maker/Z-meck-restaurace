@@ -6,6 +6,7 @@ import { formatStandingPrice, type StandingMenu } from "../lib/standingMenu";
  * stránka i náhled v administraci, aby náhled vypadal přesně jako web.
  */
 export function StandingMenuView({ menu }: { menu: StandingMenu }) {
+  const notes = menu.notes.filter((n) => n.trim());
   return (
     <>
       {menu.categories.map((category, index) => (
@@ -54,13 +55,13 @@ export function StandingMenuView({ menu }: { menu: StandingMenu }) {
       ))}
 
       {/* Footer Note */}
-      {menu.notes.length > 0 && (
+      {notes.length > 0 && (
         <div className="mt-12 bg-orange-50 rounded-xl p-8 text-center border border-orange-100">
           <UtensilsCrossed className="text-orange-700 mx-auto mb-4" size={40} />
-          {menu.notes.map((note, i) => (
+          {notes.map((note, i) => (
             <p
               key={i}
-              className={i === menu.notes.length - 1 && menu.notes.length > 1 ? "text-sm text-gray-600" : "text-gray-700 mb-2"}
+              className={i === notes.length - 1 && notes.length > 1 ? "text-sm text-gray-600" : "text-gray-700 mb-2"}
             >
               {note}
             </p>

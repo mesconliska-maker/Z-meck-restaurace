@@ -12,8 +12,8 @@ const publicDir = path.join(root, "public");
 const outDir = path.resolve(process.argv[2] ?? root);
 
 registerPdfFonts(publicDir);
-for (const german of [true, false]) {
-  const file = path.join(outDir, standingPdfFileName(german));
-  await renderToFile(<StandingMenuPdfDocument menu={DEFAULT_STANDING_MENU} german={german} assetBase={publicDir} />, file);
+for (const lang of ["cs-de", "cs", "de"] as const) {
+  const file = path.join(outDir, standingPdfFileName(lang));
+  await renderToFile(<StandingMenuPdfDocument menu={DEFAULT_STANDING_MENU} lang={lang} assetBase={publicDir} />, file);
   console.log(file);
 }

@@ -9,11 +9,21 @@
 //   - jedno jídlo (název + německý překlad + cena) se nikdy nerozdělí
 //   - od druhé strany je nahoře malé záhlaví, dole na každé straně kontakt
 //     a číslo strany "2 / 3"
+// Jazyk: "cs-de" (česky s německým překladem), "cs" (jen česky), "de" (jen
+// německy – chybějící německý text nahradí čeština, aby nic nechybělo).
 
 import type { ReactNode } from "react";
 import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { formatStandingPrice, type StandingMenu, type StandingMenuCategory } from "../../lib/standingMenu";
 import { RESTAURANT } from "../lib/restaurant";
+
+export type ListekLang = "cs-de" | "cs" | "de";
+
+const TEXT = {
+  "cs-de": { title: "Jídelní lístek", subtitle: "Speisekarte", running: "Jídelní lístek · Speisekarte", popular: "OBLÍBENÉ" },
+  cs: { title: "Jídelní lístek", subtitle: "", running: "Jídelní lístek", popular: "OBLÍBENÉ" },
+  de: { title: "Speisekarte", subtitle: "", running: "Speisekarte", popular: "BELIEBT" },
+} as const;
 
 const INK = "#1c1917";
 const MUTED = "#6b645c";
@@ -83,13 +93,25 @@ const st = StyleSheet.create({
   noteSmall: { fontFamily: SANS, fontSize: 7.5, color: MUTED, textAlign: "center", marginTop: 4 },
 });
 
+/**
+ * Název jídla jen německy. Gramáž je v lístku jen u českého názvu ("200 g Losos…"),
+ * proto ji převezmeme, když německý název žádnou nemá. Bez překladu zůstane čeština.
+ */
+function germanName(name: string, nameDe: string): string {
+  const de = nameDe.trim();
+  if (!de) return name;
+  const weight = name.match(/^\d+(?:[.,]\d+)?\s*(?:g|kg|ml|cl|dl|l)\b/i)?.[0];
+  return weight && !/^\d/.test(de) ? `${weight} ${de}` : de;
+}
+
 /** "Polévky / Suppen" → { cz: "Polévky", de: "Suppen" } */
 function splitName(name: string): { cz: string; de: string } {
   const i = name.indexOf(" / ");
   return i === -1 ? { cz: name.trim(), de: "" } : { cz: name.slice(0, i).trim(), de: name.slice(i + 3).trim() };
 }
 
-function Notes({ notes }: { notes: string[] }) {
+function Notes({ notes: raw }: { notes: string[] }) {
+  const notes = raw.filter((n) => n.trim());
   if (notes.length === 0) return null;
   return (
     <View style={st.notes} wrap={false}>
@@ -110,21 +132,23 @@ function Notes({ notes }: { notes: string[] }) {
 
 function Category({
   category,
-  german,
+  lang,
   children,
 }: {
   category: StandingMenuCategory;
-  german: boolean;
+  lang: ListekLang;
   /** Obsah připojený za kategorii, který se s ní nesmí rozdělit (poznámka za poslední kategorií). */
   children?: ReactNode;
 }) {
   const { cz, de } = splitName(category.name);
+  const title = lang === "de" ? de || cz : cz;
+  const subtitle = lang === "cs-de" ? de : "";
   const long = category.items.length > SPLIT_ABOVE_ITEMS;
   const head = (
     // minPresenceAhead: nadpis nezůstane dole na straně bez aspoň dvou jídel
     <View style={st.catHead} wrap={false} minPresenceAhead={70}>
-      <Text style={st.catName}>{cz}</Text>
-      {german && de ? <Text style={st.catNameDe}>{de}</Text> : null}
+      <Text style={st.catName}>{title}</Text>
+      {subtitle ? <Text style={st.catNameDe}>{subtitle}</Text> : null}
       <View style={st.catRule} />
     </View>
   );
@@ -134,12 +158,12 @@ function Category({
       {category.items.map((item, i) => (
         <View key={item.id} style={i === category.items.length - 1 ? [st.item, st.itemLast] : st.item} wrap={false}>
           <View style={st.itemText}>
-            <Text style={st.itemName}>{item.name}</Text>
-            {german && item.nameDe ? <Text style={st.itemDe}>{item.nameDe}</Text> : null}
+            <Text style={st.itemName}>{lang === "de" ? germanName(item.name, item.nameDe) : item.name}</Text>
+            {lang === "cs-de" && item.nameDe ? <Text style={st.itemDe}>{item.nameDe}</Text> : null}
           </View>
           <View style={st.priceCol}>
             <Text style={st.price}>{formatStandingPrice(item.price)}</Text>
-            {item.popular ? <Text style={st.popular}>OBLÍBENÉ</Text> : null}
+            {item.popular ? <Text style={st.popular}>{TEXT[lang].popular}</Text> : null}
           </View>
         </View>
       ))}
@@ -150,17 +174,19 @@ function Category({
 
 export function StandingMenuPdfDocument({
   menu,
-  german = true,
+  lang = "cs-de",
   assetBase = "",
 }: {
   menu: StandingMenu;
-  german?: boolean;
+  lang?: ListekLang;
   /** Kde leží /menu-monogram.png – v prohlížeči origin webu, v Node cesta k /public. */
   assetBase?: string;
 }) {
-  const notes = menu.notes;
+  const t = TEXT[lang];
+  // jen německy: německý řádek poznámky, kde chybí, zůstane český
+  const notes = lang === "de" ? menu.notes.map((n, i) => menu.notesDe[i]?.trim() || n) : menu.notes;
   return (
-    <Document title="Jídelní lístek" author={RESTAURANT.name} language="cs">
+    <Document title={t.title} author={RESTAURANT.name} language={lang === "de" ? "de" : "cs"}>
       <Page size="A4" style={st.page}>
         <View
           fixed
@@ -169,7 +195,7 @@ export function StandingMenuPdfDocument({
             pageNumber > 1 ? (
               <>
                 <Text>{RESTAURANT.name}</Text>
-                <Text>{german ? "Jídelní lístek · Speisekarte" : "Jídelní lístek"}</Text>
+                <Text>{t.running}</Text>
               </>
             ) : null
           }
@@ -178,8 +204,8 @@ export function StandingMenuPdfDocument({
         <View style={st.intro}>
           <Image style={st.monogram} src={`${assetBase}/menu-monogram.png`} />
           <Text style={st.eyebrow}>{RESTAURANT.name}</Text>
-          <Text style={st.title}>Jídelní lístek</Text>
-          {german ? <Text style={st.subtitle}>Speisekarte</Text> : null}
+          <Text style={st.title}>{t.title}</Text>
+          {t.subtitle ? <Text style={st.subtitle}>{t.subtitle}</Text> : null}
           <View style={st.ornament}>
             <View style={st.ornamentLine} />
             <View style={st.ornamentDot} />
@@ -189,7 +215,7 @@ export function StandingMenuPdfDocument({
 
         {/* Poznámka patří k poslední kategorii – nikdy nezůstane sama na nové straně */}
         {menu.categories.map((c, i) => (
-          <Category key={c.id} category={c} german={german}>
+          <Category key={c.id} category={c} lang={lang}>
             {i === menu.categories.length - 1 ? <Notes notes={notes} /> : null}
           </Category>
         ))}
@@ -206,6 +232,6 @@ export function StandingMenuPdfDocument({
   );
 }
 
-export function standingPdfFileName(german: boolean): string {
-  return german ? "jidelni-listek.pdf" : "jidelni-listek-cz.pdf";
+export function standingPdfFileName(lang: ListekLang): string {
+  return lang === "cs-de" ? "jidelni-listek.pdf" : lang === "cs" ? "jidelni-listek-cz.pdf" : "speisekarte-de.pdf";
 }
