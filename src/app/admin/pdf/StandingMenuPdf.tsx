@@ -27,6 +27,8 @@ const TEXT = {
 
 const INK = "#1c1917";
 const MUTED = "#6b645c";
+// Překlady a podnázvy – tmavší než MUTED, aby se v tisku daly dobře číst.
+const SOFT = "#4a443d";
 const GOLD = "#8a6e3a";
 const RULE = "#e4dccd";
 
@@ -36,7 +38,7 @@ const SANS = "Inter";
 /** Kategorie s víc jídly než tolik se smí rozdělit mezi strany (jinak by přetekla). */
 const SPLIT_ABOVE_ITEMS = 16;
 
-const PAGE = { top: 44, bottom: 54, x: 54 };
+const PAGE = { top: 44, bottom: 58, x: 46 };
 
 const st = StyleSheet.create({
   page: { paddingTop: PAGE.top, paddingBottom: PAGE.bottom, paddingHorizontal: PAGE.x, backgroundColor: "#ffffff" },
@@ -46,7 +48,7 @@ const st = StyleSheet.create({
   monogram: { width: 40, height: 40, marginBottom: 8 },
   eyebrow: { fontFamily: SANS, fontWeight: 500, fontSize: 7.5, letterSpacing: 2.4, color: GOLD, textTransform: "uppercase", marginBottom: 4 },
   title: { fontFamily: SERIF, fontWeight: 600, fontSize: 34, color: INK, lineHeight: 1.05 },
-  subtitle: { fontFamily: SERIF, fontStyle: "italic", fontWeight: 500, fontSize: 14, color: MUTED, marginTop: 2 },
+  subtitle: { fontFamily: SERIF, fontStyle: "italic", fontWeight: 500, fontSize: 16, color: SOFT, marginTop: 2 },
   ornament: { flexDirection: "row", alignItems: "center", marginTop: 11 },
   ornamentLine: { width: 60, height: 0.6, backgroundColor: GOLD },
   ornamentDot: { width: 4, height: 4, backgroundColor: GOLD, transform: "rotate(45deg)", marginHorizontal: 7 },
@@ -55,7 +57,7 @@ const st = StyleSheet.create({
   runningHead: {
     position: "absolute", top: 22, left: PAGE.x, right: PAGE.x,
     flexDirection: "row", justifyContent: "space-between",
-    fontFamily: SANS, fontSize: 7, letterSpacing: 1.4, color: GOLD, textTransform: "uppercase",
+    fontFamily: SANS, fontSize: 8, letterSpacing: 1.4, color: GOLD, textTransform: "uppercase",
   },
 
   // patička na každé straně
@@ -64,33 +66,34 @@ const st = StyleSheet.create({
     flexDirection: "row", justifyContent: "space-between", alignItems: "center",
     borderTopWidth: 0.6, borderTopColor: RULE, paddingTop: 7,
   },
-  footerText: { fontFamily: SANS, fontSize: 7, color: MUTED, letterSpacing: 0.2 },
-  pageNumber: { fontFamily: SERIF, fontWeight: 600, fontSize: 10, color: GOLD },
+  footerText: { fontFamily: SANS, fontSize: 8.5, color: MUTED, letterSpacing: 0.2 },
+  pageNumber: { fontFamily: SERIF, fontWeight: 600, fontSize: 12, color: GOLD },
 
   // kategorie
-  category: { marginBottom: 14 },
+  category: { marginBottom: 16 },
   catHead: { alignItems: "center", marginBottom: 5 },
-  catName: { fontFamily: SERIF, fontWeight: 600, fontSize: 19, color: INK, lineHeight: 1.1, textAlign: "center" },
-  catNameDe: { fontFamily: SERIF, fontStyle: "italic", fontWeight: 500, fontSize: 11.5, color: MUTED, textAlign: "center" },
+  catName: { fontFamily: SERIF, fontWeight: 600, fontSize: 23, color: INK, lineHeight: 1.1, textAlign: "center" },
+  catNameDe: { fontFamily: SERIF, fontStyle: "italic", fontWeight: 500, fontSize: 15, color: SOFT, textAlign: "center" },
   catRule: { width: 30, height: 1, backgroundColor: GOLD, marginTop: 4 },
 
   // jídlo
   item: {
-    flexDirection: "row", alignItems: "flex-start", paddingVertical: 3.4,
+    flexDirection: "row", alignItems: "flex-start", paddingVertical: 4.2,
     borderBottomWidth: 0.5, borderBottomColor: RULE,
   },
   itemLast: { borderBottomWidth: 0 },
   itemText: { flex: 1, paddingRight: 14 },
-  itemName: { fontFamily: SANS, fontSize: 9.5, color: INK, lineHeight: 1.32 },
-  itemDe: { fontFamily: SERIF, fontStyle: "italic", fontWeight: 500, fontSize: 9.5, color: MUTED, lineHeight: 1.15 },
-  priceCol: { width: 64, alignItems: "flex-end" },
-  price: { fontFamily: SANS, fontWeight: 500, fontSize: 9.5, color: INK, lineHeight: 1.32, textAlign: "right" },
-  popular: { fontFamily: SANS, fontWeight: 600, fontSize: 5.8, letterSpacing: 1, color: GOLD, marginTop: 1.5 },
+  itemName: { fontFamily: SANS, fontSize: 12, color: INK, lineHeight: 1.3 },
+  // Cormorant má malé písmo – proto o kus větší než česká Inter vedle něj
+  itemDe: { fontFamily: SERIF, fontStyle: "italic", fontWeight: 500, fontSize: 13.5, color: SOFT, lineHeight: 1.15 },
+  priceCol: { width: 74, alignItems: "flex-end" },
+  price: { fontFamily: SANS, fontWeight: 500, fontSize: 12, color: INK, lineHeight: 1.3, textAlign: "right" },
+  popular: { fontFamily: SANS, fontWeight: 600, fontSize: 7, letterSpacing: 1, color: GOLD, marginTop: 1.5 },
 
   // poznámka na konci
   notes: { marginTop: 10, paddingTop: 9, borderTopWidth: 0.6, borderTopColor: GOLD, alignItems: "center" },
-  note: { fontFamily: SERIF, fontStyle: "italic", fontWeight: 500, fontSize: 10.5, color: INK, textAlign: "center", lineHeight: 1.35 },
-  noteSmall: { fontFamily: SANS, fontSize: 7.5, color: MUTED, textAlign: "center", marginTop: 4 },
+  note: { fontFamily: SERIF, fontStyle: "italic", fontWeight: 500, fontSize: 13, color: INK, textAlign: "center", lineHeight: 1.35 },
+  noteSmall: { fontFamily: SANS, fontSize: 9, color: MUTED, textAlign: "center", marginTop: 4 },
 });
 
 /**
