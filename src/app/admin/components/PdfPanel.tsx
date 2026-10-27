@@ -4,6 +4,7 @@ import type { PdfFormat } from "../pdf/MenuPdf";
 import { pdfFileName } from "../pdf/fileName";
 import { cleanWeek } from "../lib/menu";
 import type { WeekMenu } from "../lib/types";
+import { errorText } from "../../lib/staleChunk";
 
 const FORMATS: { id: PdfFormat; label: string; hint: string }[] = [
   { id: "a4", label: "A4 – vývěska", hint: "jedna A4 na výšku" },
@@ -33,7 +34,7 @@ export function PdfPanel({ week }: { week: WeekMenu }) {
         setUrl(next);
         setError(null);
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : String(e));
+        if (!cancelled) setError(errorText(e));
       } finally {
         if (!cancelled) setBusy(false);
       }

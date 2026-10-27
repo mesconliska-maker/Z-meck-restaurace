@@ -2,6 +2,7 @@ import { Download, ExternalLink, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { StandingMenu } from "../../lib/standingMenu";
 import { standingPdfFileName, type ListekLang } from "../pdf/StandingMenuPdf";
+import { errorText } from "../../lib/staleChunk";
 
 const LANGS: { id: ListekLang; label: string }[] = [
   { id: "cs-de", label: "Česky + německy" },
@@ -33,7 +34,7 @@ export function StandingPdfPanel({ menu }: { menu: StandingMenu }) {
         setUrl(next);
         setError(null);
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : String(e));
+        if (!cancelled) setError(errorText(e));
       } finally {
         if (!cancelled) setBusy(false);
       }
