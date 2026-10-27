@@ -136,9 +136,9 @@ export function Footer() {
               Vytvořeno v <a href="https://comvio.cz" target="_blank" rel="noopener noreferrer" className="hover:text-orange-600 transition-colors">comvio.cz</a>
             </p>
             <div className="flex gap-6">
-              <a href="#" className="hover:text-orange-600 transition-colors">
+              <Link to="/ochrana-osobnich-udaju" className="hover:text-orange-600 transition-colors">
                 Ochrana osobních údajů
-              </a>
+              </Link>
               <a href="#" className="hover:text-orange-600 transition-colors">
                 Podmínky použití
               </a>

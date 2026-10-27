@@ -6,6 +6,7 @@ import { GalleryPage } from "./pages/GalleryPage";
 import { Contact } from "./pages/Contact";
 import { Catering } from "./pages/Catering";
 import { NotFound } from "./pages/NotFound";
+import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 
 export const router = createBrowserRouter([
   // Administrace poledních menu – samostatná stránka bez layoutu webu,
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
       { path: "galerie", Component: GalleryPage },
       { path: "kontakt", Component: Contact },
       { path: "catering", Component: Catering },
+      { path: "ochrana-osobnich-udaju", Component: PrivacyPolicy },
       { path: "*", Component: NotFound },
     ],
   },
