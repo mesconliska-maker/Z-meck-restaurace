@@ -9,6 +9,7 @@ import { getMenuStore } from "../lib/store";
 import type { WeekMenu } from "../lib/types";
 import { formatWeekRange } from "../lib/week";
 import { SchedulePicker, defaultScheduleDate, formatSchedule, isSchedulable } from "./SchedulePicker";
+import { errorText } from "../../lib/staleChunk";
 
 interface PublishResult {
   url: string;
@@ -103,7 +104,7 @@ export function FacebookPanel({
         setImage({ blob, url });
         setRenderError(null);
       } catch (e) {
-        if (!cancelled) setRenderError(e instanceof Error ? e.message : String(e));
+        if (!cancelled) setRenderError(errorText(e));
       } finally {
         if (!cancelled) setRendering(false);
       }
